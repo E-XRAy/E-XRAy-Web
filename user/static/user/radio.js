@@ -39,7 +39,7 @@ searchPatient.addEventListener('submit', (e) => {
 
 
 //realtime listener of files collection
-db.collection('file').onSnapshot(snapshot => {
+/*db.collection('file').onSnapshot(snapshot => {
     let changes = snapshot.docChanges();
     changes.forEach(change => {
         if (change.doc.data().RadiologistId == auth.currentUser.uid) {
@@ -49,7 +49,7 @@ db.collection('file').onSnapshot(snapshot => {
         }
 
     })
-})
+})*/
 
 
 const RadioFileListGen = (docu) => {

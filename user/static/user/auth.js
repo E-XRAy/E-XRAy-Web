@@ -77,6 +77,18 @@ auth.onAuthStateChanged(user => {
         db.collection('users').doc(user.uid).get().then((snapshot) => {
             setupProfile(snapshot.data());
             setupHome(snapshot.data().UserType);
+        });
+        db.collection('file').onSnapshot(snapshot => {
+            let changes = snapshot.docChanges();
+            changes.forEach(change => {
+                if (change.doc.data().RadiologistId == user.uid) {
+                    if (change.type == 'added') {
+                        console.log(change.doc.data());
+                        RadioFileListGen(change.doc);
+                    }
+                }
+        
+            })
         }).catch(function (error) {
             console.log(error.message);
         });
