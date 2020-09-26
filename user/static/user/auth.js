@@ -101,9 +101,9 @@ auth.onAuthStateChanged(user => {
                 }
         
             })
-        }).catch(function (error) {
+        }),function (error) {
             console.log(error.message);
-        });
+        };
     } else {
         setupHome();
         setupNav();
