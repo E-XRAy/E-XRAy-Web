@@ -25,7 +25,7 @@ searchPatient.addEventListener('submit', (e) => {
     e.preventDefault();
     const searchPatientName = searchPatient['search-patient-name'].value;
     console.log(searchPatientName);
-    db.collection('users').where('EmailId', '==', searchPatientName).get().then((snapshot) => {
+    db.collection('users').where('EmailId', '==', searchPatientName).where('UserType', '==', 'Patient').get().then((snapshot) => {
         snapshot.docs.forEach(doc => {
             searchPatient.setAttribute('data-id', doc.id);
             console.log(doc.data().UserName)
