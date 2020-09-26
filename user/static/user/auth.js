@@ -73,6 +73,7 @@ auth.onAuthStateChanged(user => {
     if (user) {
         PatientFileListGen();
         RadioFileListGen();
+        DoctorFileListGen();
         console.log('user logged in :', user.uid);
         //getting data
         setupNav(user);
@@ -92,6 +93,10 @@ auth.onAuthStateChanged(user => {
                     if (change.type == 'added') {
                         console.log(change.doc.data());
                         PatientFileListGen(change.doc);
+                    }
+                }else if (change.doc.data().DocList.includes(auth.currentUser.uid)) {
+                    if (change.type == 'added') {
+                        DoctorFileListGen(change.doc);
                     }
                 }
         
