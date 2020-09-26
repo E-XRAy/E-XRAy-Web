@@ -71,6 +71,7 @@ logout.addEventListener('click', (e) => {
 ///listen to auth status changes
 auth.onAuthStateChanged(user => {
     if (user) {
+        RadioFileListGen();
         console.log('user logged in :', user.uid);
         //getting data
         setupNav(user);
