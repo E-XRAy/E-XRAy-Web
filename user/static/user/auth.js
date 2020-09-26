@@ -71,6 +71,7 @@ logout.addEventListener('click', (e) => {
 ///listen to auth status changes
 auth.onAuthStateChanged(user => {
     if (user) {
+        PatientFileListGen();
         RadioFileListGen();
         console.log('user logged in :', user.uid);
         //getting data
@@ -86,6 +87,11 @@ auth.onAuthStateChanged(user => {
                     if (change.type == 'added') {
                         console.log(change.doc.data());
                         RadioFileListGen(change.doc);
+                    }
+                }else if (change.doc.data().PatientId == user.uid) {
+                    if (change.type == 'added') {
+                        console.log(change.doc.data());
+                        PatientFileListGen(change.doc);
                     }
                 }
         
