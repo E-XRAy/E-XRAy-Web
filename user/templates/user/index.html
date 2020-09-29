@@ -177,16 +177,22 @@
                     <div class="container">
                         <form action="/action_page.php">
                             <div class="custom-file mb-1">
-                                <input type="file" class="custom-file-input" id="customFile" name="filename">
+                                <input type="file" class="custom-file-input" id="customFile" onchange="loadFile(event)"
+                                    name="filename">
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </form>
+                        <p><img id="output" width="500" /></p>
                         <script>
                             // Add the following code if you want the name of the file appear on select
                             $(".custom-file-input").on("change", function () {
                                 var fileName = $(this).val().split("\\").pop();
                                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                             });
+                            var loadFile = function (event) {
+                                var image = document.getElementById('output');
+                                image.src = URL.createObjectURL(event.target.files[0]);
+                            };
                         </script>
 
                         <!--<form class="form-inline" method="POST" onsubmit="return false">
@@ -212,23 +218,23 @@
                                     for="searchedPatientName">Patient Name</label>
                                 <input id="searchedPatientName" class="form-control-sm col-sm-6"
                                     style="border-radius: 10px;" type="text" name="searchedPatientName" required><br>
-                            
-                            <label for="FileName">File Name</label>
-                            <input id="FileName" class="form-control-sm col-sm-6" style="border-radius: 10px;"
-                                type="text" placeholder="Enter File Name" name="FileName" required><br>
-                            <label for="FileType">Filetype</label>
-                            <select class="custom-select form-control-sm col-sm-4" id="FileType" name="FileType">
-                                <option value="Xray" selected>Xray</option>
-                                <option value="MRI">MRI</option>
-                                <option value="UltraSound">UltraSound</option>
-                            </select><br>
-                            <label for="Notes">Notes</label>
-                            <textarea class=" ml-0" style="border-radius: 5px; background-color:floralwhite"
-                                class="form-control" name="Notes" id="Notes" rows="2" cols="40"></textarea>
-                            <button type="submit" class="btn btn-outline-primary"
-                                style="border-radius: 10px; float: right;">Sent<i class="fa fa-paper-plane"
-                                    aria-hidden="true"></i>
-                            </button></section>
+
+                                <label for="FileName">File Name</label>
+                                <input id="FileName" class="form-control-sm col-sm-6" style="border-radius: 10px;"
+                                    type="text" placeholder="Enter File Name" name="FileName" required><br>
+                                <label for="FileType">Filetype</label>
+                                <select class="custom-select form-control-sm col-sm-4" id="FileType" name="FileType">
+                                    <option value="Xray" selected>Xray</option>
+                                    <option value="MRI">MRI</option>
+                                    <option value="UltraSound">UltraSound</option>
+                                </select><br>
+                                <label for="Notes">Notes</label>
+                                <textarea class=" ml-0" style="border-radius: 5px; background-color:floralwhite"
+                                    class="form-control" name="Notes" id="Notes" rows="2" cols="40"></textarea>
+                                <button type="submit" class="btn btn-outline-primary"
+                                    style="border-radius: 10px; float: right;">Sent<i class="fa fa-paper-plane"
+                                        aria-hidden="true"></i>
+                                </button></section>
                         </div>
                     </form>
                     <div class="container">
@@ -245,7 +251,7 @@
                             </button>
                         </form>
                         <div id="radiofileList" style="max-height: 400px;overflow: auto;">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -267,22 +273,22 @@
                     </div>
                     <div class="container">
                         <form id="searchDoctor" class="form-inline" method="POST" onsubmit="return false">
-                            <input id="doctorEmailorPhone" type="text" class="form-control col-sm-8 mr-2 mb-2 mt-3" style="border-radius: 10px"
-                                tabindex="1" placeholder="Enter Email or PhoneNumber">
+                            <input id="doctorEmailorPhone" type="text" class="form-control col-sm-8 mr-2 mb-2 mt-3"
+                                style="border-radius: 10px" tabindex="1" placeholder="Enter Email or PhoneNumber">
                             <button type="submit" class="btn btn-outline-primary mt-1" style="border-radius: 10px"><i
                                     class="fa fa-search" aria-hidden="true">Doctor</i>
                             </button>
                         </form>
                         <form class="from-inline" id="searchedDoctor" style='display: none;'>
-                            <input id="searchedDoctorName" type="text" class="form-control col-sm-8 mr-2 mb-2 mt-3" style="border-radius: 10px"
-                                tabindex="1" disabled>
-                            <button type="submit" class="btn btn-outline-primary" style="border-radius: 10px;">Sent<i class="fa fa-paper-plane"
-                                aria-hidden="true"></i>
+                            <input id="searchedDoctorName" type="text" class="form-control col-sm-8 mr-2 mb-2 mt-3"
+                                style="border-radius: 10px" tabindex="1" disabled>
+                            <button type="submit" class="btn btn-outline-primary" style="border-radius: 10px;">Sent<i
+                                    class="fa fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </form>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-sm-6">
                     <div class="jumbotron mt-3" style="border-radius: 50px;">
                         <form class="form-inline" method="POST" onsubmit="return false">
@@ -339,7 +345,7 @@
         <div class="container">
             <div class="row">
 
-               <!-- <div class="col-md-6 col-sm-6">
+                <!-- <div class="col-md-6 col-sm-6">
                     <h1>General Section</h1>
                 </div>-->
 
@@ -347,7 +353,13 @@
                     <h1>Smart X-Ray Scanner</h1>
                     <h3>Theme by Mehta Group of Hospitals</h3>
                     <div>
-                Traditional X-Ray films are bulky and unportable causing patients to leave behind these films when going for follow-up hospital visits, resulting in poorer diagnosis. Currently, the radiology department or diagnostic labs have to print and review the x-ray film and then physically hand it over to the patient/treating doctor for a diagnosis. Help hospitals and diagnostics by enabling better diagnosis and health outcomes, cost savings, the faster mechanism by building a reliable mobile app or lens/scanner that can capture the x-ray image without any loss in image clarity or image distortion.</div>
+                        Traditional X-Ray films are bulky and unportable causing patients to leave behind these films
+                        when going for follow-up hospital visits, resulting in poorer diagnosis. Currently, the
+                        radiology department or diagnostic labs have to print and review the x-ray film and then
+                        physically hand it over to the patient/treating doctor for a diagnosis. Help hospitals and
+                        diagnostics by enabling better diagnosis and health outcomes, cost savings, the faster mechanism
+                        by building a reliable mobile app or lens/scanner that can capture the x-ray image without any
+                        loss in image clarity or image distortion.</div>
                 </div>
 
             </div>
