@@ -19,7 +19,9 @@ fileForm.addEventListener('submit', (e) => {
         PatientId: PatientId,
         RadiologistId: auth.currentUser.uid,
         DocList: [],
-        FileUrl:document.getElementById('output').src,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        FileUrl: document.getElementById('output').src,
+        DicomUrl:document.getElementsByTagName('canvas')[0].getAttribute('data-id'),
     });
 })
 //image handling
@@ -37,26 +39,55 @@ var loadFile = function (event) {
     //image.src = URL.createObjectURL(event.target.files[0]);
     var metadata = {
         'contentType': file_to_upload.type
-      };
-      storageRef.child('images/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
-        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-        console.log('File metadata:', snapshot.metadata);
-        // Let's get a download URL for the file.
-        snapshot.ref.getDownloadURL().then(function (url) {
-          console.log('File available at', url);
-          // [START_EXCLUDE]
-          //document.getElementById('output').src =  url ;
-          radioFilePreview.innerHTML=`<img src=${url} id='output' style="width:300px;">
-          `
-          // [END_EXCLUDE]
+    };
+    if (metadata.contentType.length > 0) {
+        console.log('image');
+        storageRef.child('images/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
+            console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+            console.log('File metadata:', snapshot.metadata);
+            // Let's get a download URL for the file.
+            snapshot.ref.getDownloadURL().then(function (url) {
+                console.log('File available at', url);
+                // [START_EXCLUDE]
+                //document.getElementById('output').src =  url ;
+                radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">
+              `
+                // [END_EXCLUDE]
+            });
+        }).catch(function (error) {
+            // [START onfailure]
+            console.error('Upload failed:', error);
+            // [END onfailure]
         });
-      }).catch(function (error) {
-        // [START onfailure]
-        console.error('Upload failed:', error);
-        // [END onfailure]
-      });
-      // [END oncomplete]
-      
+        // [END oncomplete]
+    } else {
+        console.log('dicom');
+        storageRef.child('dicom/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
+            console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+            console.log('File metadata:', snapshot.metadata);
+            // Let's get a download URL for the file.
+            snapshot.ref.getDownloadURL().then(function (url) {
+                console.log('File available at', url);
+                // [START_EXCLUDE]
+                //document.getElementById('output').src =  url ;
+                //radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">
+                // `
+                url = "wadouri:" + url;
+                // image enable the dicomImage element and activate a few tools
+                loadAndViewImage(url);
+                var canvas = document.getElementsByTagName('canvas')[0];
+                canvas.setAttribute('data-id',url);
+                // [END_EXCLUDE]
+            });
+        }).catch(function (error) {
+            // [START onfailure]
+            console.error('Upload failed:', error);
+            // [END onfailure]
+        });
+        // [END oncomplete]
+    }
+
+
 };
 
 searchPatient.addEventListener('submit', (e) => {
@@ -113,11 +144,12 @@ const RadioFileListGen = (docu) => {
 }
 function radselectFile(self, id) {
     console.log(id.getAttribute('id'));
-    radioFilePreview.setAttribute('data-id', id.getAttribute('id'))
+   // radioFilePreview.setAttribute('data-id', id.getAttribute('id'))
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         let radPreview =
             `<img src=${doc.data().FileUrl} style="width:300px;">
+            <canvas width="300" height="300" style="width: 300px; height: 300px;"></canvas>
             `
         radioFilePreview.innerHTML = radPreview;
     })
