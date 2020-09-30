@@ -4,6 +4,7 @@ const searchPatient = document.querySelector('#search-patient');
 const fileForm = document.querySelector('#radio-files-form');
 const radiofileList = document.querySelector('#radiofileList');
 const radioFilePreview = document.querySelector('#radioFilePreview');
+
 fileForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const FileName = fileForm['FileName'].value;
@@ -18,8 +19,45 @@ fileForm.addEventListener('submit', (e) => {
         PatientId: PatientId,
         RadiologistId: auth.currentUser.uid,
         DocList: [],
+        FileUrl:document.getElementById('output').src,
     });
 })
+//image handling
+
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function () {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+var file_to_upload;
+var loadFile = function (event) {
+    var image = document.getElementById('output');
+    console.log(event.target.files[0]);
+    var file_to_upload = event.target.files[0];
+    //image.src = URL.createObjectURL(event.target.files[0]);
+    var metadata = {
+        'contentType': file_to_upload.type
+      };
+      storageRef.child('images/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
+        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+        console.log('File metadata:', snapshot.metadata);
+        // Let's get a download URL for the file.
+        snapshot.ref.getDownloadURL().then(function (url) {
+          console.log('File available at', url);
+          // [START_EXCLUDE]
+          //document.getElementById('output').src =  url ;
+          radioFilePreview.innerHTML=`<img src=${url} id='output' style="width:300px;">
+          `
+          // [END_EXCLUDE]
+        });
+      }).catch(function (error) {
+        // [START onfailure]
+        console.error('Upload failed:', error);
+        // [END onfailure]
+      });
+      // [END oncomplete]
+      
+};
 
 searchPatient.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -79,8 +117,8 @@ function radselectFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         let radPreview =
-            `<h4>filename:${doc.data().FileName}</h4>
+            `<img src=${doc.data().FileUrl} style="width:300px;">
             `
-            radioFilePreview.innerHTML = radPreview;
+        radioFilePreview.innerHTML = radPreview;
     })
 }

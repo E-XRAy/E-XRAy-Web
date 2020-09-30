@@ -44,7 +44,7 @@ function docselectFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         let docPreview =
-        `<h4>filename:${doc.data().FileName}</h4>
+        `<img src=${doc.data().FileUrl} style="width:300px;">
         `
         doctorFilePreview.innerHTML=docPreview;
     })

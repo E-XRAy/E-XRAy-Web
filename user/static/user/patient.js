@@ -78,7 +78,7 @@ function patselectFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         let patPreview =
-        `<img src=${doc.data().img} style="width:300px;">
+        `<img src=${doc.data().FileUrl} style="width:300px;">
         `
         patientFilePreview.innerHTML=patPreview;
     })
