@@ -76,7 +76,7 @@ const PatientFileListGen = (docu) => {
 function patselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
-        ploadAndViewImage(doc.data().DicomUrl);
+        loadAndViewImage(doc.data().DicomUrl);
         document.getElementById('output').style.display = 'none';
         document.getElementsByTagName('canvas')[0].style.display = 'block';
     })

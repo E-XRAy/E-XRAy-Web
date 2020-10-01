@@ -43,9 +43,9 @@ function docselectFile(self, id) {
     doctorFilePreview.setAttribute('data-id',id.getAttribute('id'))
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
-        let docPreview =
-        `<img src=${doc.data().FileUrl} style="width:300px;">
-        `
-        doctorFilePreview.innerHTML=docPreview;
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('src', doc.data().FileUrl);
+            item.style.display = 'block';
+        });
     })
 }

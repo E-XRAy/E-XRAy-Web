@@ -11,7 +11,7 @@ fileForm.addEventListener('submit', (e) => {
     const FileType = fileForm['FileType'].value;
     const Notes = fileForm['Notes'].value;
     const PatientId = searchPatient.getAttribute('data-id');
-    const DicomUrl=document.getElementsByTagName('canvas')[0].getAttribute('data-id');
+    const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
     console.log(DicomUrl.length);
     var docId
     db.collection('file').add({
@@ -24,26 +24,24 @@ fileForm.addEventListener('submit', (e) => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         FileUrl: document.getElementById('output').src,
         DicomUrl: DicomUrl,
-    }).then(function(docRef) {
-        docId=docRef.id;
+    }).then(function (docRef) {
+        docId = docRef.id;
         console.log("Document written with ID: ", docRef.id);
     });
-    if(DicomUrl.length>0){
+    if (DicomUrl.length > 0) {
         var canvas = document.getElementsByTagName('canvas')[0];
-        canvas.toBlob(function(blob) {
+        canvas.toBlob(function (blob) {
             url = URL.createObjectURL(blob);
-      storageRef.child(FileName).put(blob).then(function(snapshot) {
-        console.log('Uploaded a blob or file!');
-        snapshot.ref.getDownloadURL().then(function (url) {
-            console.log('File available at', url);
-            db.collection('file').doc(docId).update({
-                FileUrl:url
-            })
+            storageRef.child(FileName).put(blob).then(function (snapshot) {
+                console.log('Uploaded a blob or file!');
+                snapshot.ref.getDownloadURL().then(function (url) {
+                    console.log('File available at', url);
+                    db.collection('file').doc(docId).update({
+                        FileUrl: url
+                    })
+                });
+            });
         });
-      });
-      
-        //document.body.appendChild(newImg);
-      });
     }
 })
 //image handling
@@ -69,13 +67,9 @@ var loadFile = function (event) {
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
-                //console.log('File available at', url);
-                // [START_EXCLUDE]
-                //document.getElementById('output').src =  url ;
-                //radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">`
-                document.getElementById('output').setAttribute('src',url);
+                document.getElementById('output').setAttribute('src', url);
                 document.getElementsByTagName('canvas')[0].setAttribute('data-id', "");
-                
+
                 document.getElementById('output').style.display = 'block';
                 document.getElementsByTagName('canvas')[0].style.display = 'none';
 
@@ -95,10 +89,6 @@ var loadFile = function (event) {
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
                 console.log('File available at', url);
-                // [START_EXCLUDE]
-                //document.getElementById('output').src =  url ;
-                //radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">
-                // `
                 url = "wadouri:" + url;
                 // image enable the dicomImage element and activate a few tools
                 loadAndViewImage(url);
@@ -197,17 +187,9 @@ function radselectdicomFile(self, id) {
 
 function radselectFile(self, id) {
     console.log(id.getAttribute('id'));
-    // radioFilePreview.setAttribute('data-id', id.getAttribute('id'))
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
-        //let radPreview =
-        //    `<img src=${doc.data().FileUrl} style="width:300px;">
-        //   
-        //    `
-        //radioFilePreview.innerHTML = radPreview;
-        /*document.getElementById('output').setAttribute('src', doc.data().FileUrl);
-        document.getElementById('output').style.display = 'block';
-        document.getElementsByTagName('canvas')[0].style.display = 'none';*/
+        
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('src', doc.data().FileUrl);
             item.style.display = 'block';
