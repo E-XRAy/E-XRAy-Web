@@ -255,18 +255,7 @@
         </div>
 
 
-        <form id="form" class="form-horizontal">
-            <div class="form-group">
-
-                <div class="col-sm-8">
-                    <input class="form-control" type="text" id="wadoURL" placeholder="Enter WADO URL"
-                        value="https://raw.githubusercontent.com/cornerstonejs/cornerstoneWADOImageLoader/master/testImages/CT2_J2KR">
-                </div>
-                <div class="col-sm-3">
-                    <button class="form-control" type="button" id="downloadAndView">Download and View</button>
-                </div>
-            </div>
-        </form>
+        
         <br>
 
         <script>
@@ -354,15 +343,7 @@
             }
             var element = document.getElementById('canvasgenerator');
             cornerstone.enable(element);
-            document.getElementById('downloadAndView').addEventListener('click', function (e) {
-                downloadAndView();
-            });
-
-            const form = document.getElementById('form');
-            form.addEventListener('submit', function () {
-                downloadAndView();
-                return false;
-            });
+            
         </script>
 
     </section>
@@ -376,7 +357,7 @@
                     <h4 class="mt-3">Preview</h4>
                     <div id="patientFilePreview" class="jumbotron mt-4 ml-0" style="border-radius: 20px;">
                         <p><img id="output" width="300" /></p>
-                        <div id="canvasgenerator"></div>
+                        <div id="canvasgenerator1"></div>
                     </div>
                     <div class="container">
                         <form id="searchDoctor" class="form-inline" method="POST" onsubmit="return false">
@@ -411,6 +392,93 @@
                     </div>
                 </div>
             </div>
+            <script>
+                cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+                cornerstoneWADOImageLoader.configure({
+                    beforeSend: function (xhr) {
+                        // Add custom headers here (e.g. auth tokens)
+                        //xhr.setRequestHeader('APIKEY', 'my auth token');
+                    }
+                });
+                var loaded = false;
+                function loadAndViewImage2(imageId) {
+                    var canvas = document.getElementsByTagName('canvas')[1];
+                    canvas.width=300;
+                    canvas.height=300;
+                    canvas.style.height = "300px";
+                    canvas.style.width ="300px" ;
+                    var element = document.getElementById('canvasgenerator1');
+                    try {
+                        var start = new Date().getTime();
+                        cornerstone.loadAndCacheImage(imageId).then(function (image) {
+                            console.log(image);
+                            var viewport = cornerstone.getDefaultViewportForImage(element, image);
+                            cornerstone.displayImage(element, image, viewport);
+                            console.log(element);
+                            console.log(viewport);
+                            if (loaded === false) {
+                                cornerstoneTools.mouseInput.enable(element);
+                                cornerstoneTools.mouseWheelInput.enable(element);
+                                cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
+                                cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
+                                cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
+                                cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
+                                loaded = true;
+                            }
+    
+                            function getTransferSyntax() {
+                                const value = image.data.string('x00020010');
+                                return value + ' [' + uids[value] + ']';
+                            }
+    
+                            function getSopClass() {
+                                const value = image.data.string('x00080016');
+                                return value + ' [' + uids[value] + ']';
+                            }
+    
+                            function getPixelRepresentation() {
+                                const value = image.data.uint16('x00280103');
+                                if (value === undefined) {
+                                    return;
+                                }
+                                return value + (value === 0 ? ' (unsigned)' : ' (signed)');
+                            }
+    
+                            function getPlanarConfiguration() {
+                                const value = image.data.uint16('x00280006');
+                                if (value === undefined) {
+                                    return;
+                                }
+                                return value + (value === 0 ? ' (pixel)' : ' (plane)');
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                    catch (err) {
+                        alert(err);
+                    }
+                }
+                
+                function downloadAndView() {
+                    let url = document.getElementById('wadoURL').value;
+                    // prefix the url with wadouri: so cornerstone can find the image loader
+                    url = "wadouri:" + url;
+                    // image enable the dicomImage element and activate a few tools
+                    loadAndViewImage2(url);
+                }
+                function getUrlWithoutFrame() {
+                    var url = document.getElementById('wadoURL').value;
+                    var frameIndex = url.indexOf('frame=');
+                    if (frameIndex !== -1) {
+                        url = url.substr(0, frameIndex - 1);
+                    }
+                    return url;
+                }
+                var element = document.getElementById('canvasgenerator1');
+                cornerstone.enable(element);
+                
+            </script>
     </section>
     <!-- Doctor Section -->
 
@@ -422,6 +490,7 @@
                     <h4 class="mt-3">Preview</h4>
                     <div id='doctorFilePreview' class="jumbotron mt-4 ml-0" style="border-radius: 20px;">
                         <p><img id="output" width="300" /></p>
+                        <div id="canvasgenerator2"></div>
                     </div>
                 </div>
 
@@ -443,6 +512,93 @@
                 </div>
             </div>
         </div>
+        <script>
+            cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+            cornerstoneWADOImageLoader.configure({
+                beforeSend: function (xhr) {
+                    // Add custom headers here (e.g. auth tokens)
+                    //xhr.setRequestHeader('APIKEY', 'my auth token');
+                }
+            });
+            var loaded = false;
+            function loadAndViewImage3(imageId) {
+                var canvas = document.getElementsByTagName('canvas')[2];
+                canvas.width=300;
+                canvas.height=300;
+                canvas.style.height = "300px";
+                canvas.style.width ="300px" ;
+                var element = document.getElementById('canvasgenerator2');
+                try {
+                    var start = new Date().getTime();
+                    cornerstone.loadAndCacheImage(imageId).then(function (image) {
+                        console.log(image);
+                        var viewport = cornerstone.getDefaultViewportForImage(element, image);
+                        cornerstone.displayImage(element, image, viewport);
+                        console.log(element);
+                        console.log(viewport);
+                        if (loaded === false) {
+                            cornerstoneTools.mouseInput.enable(element);
+                            cornerstoneTools.mouseWheelInput.enable(element);
+                            cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
+                            cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
+                            cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
+                            cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
+                            loaded = true;
+                        }
+
+                        function getTransferSyntax() {
+                            const value = image.data.string('x00020010');
+                            return value + ' [' + uids[value] + ']';
+                        }
+
+                        function getSopClass() {
+                            const value = image.data.string('x00080016');
+                            return value + ' [' + uids[value] + ']';
+                        }
+
+                        function getPixelRepresentation() {
+                            const value = image.data.uint16('x00280103');
+                            if (value === undefined) {
+                                return;
+                            }
+                            return value + (value === 0 ? ' (unsigned)' : ' (signed)');
+                        }
+
+                        function getPlanarConfiguration() {
+                            const value = image.data.uint16('x00280006');
+                            if (value === undefined) {
+                                return;
+                            }
+                            return value + (value === 0 ? ' (pixel)' : ' (plane)');
+                        }
+                    }, function (err) {
+                        alert(err);
+                    });
+                }
+                catch (err) {
+                    alert(err);
+                }
+            }
+            
+            function downloadAndView() {
+                let url = document.getElementById('wadoURL').value;
+                // prefix the url with wadouri: so cornerstone can find the image loader
+                url = "wadouri:" + url;
+                // image enable the dicomImage element and activate a few tools
+                loadAndViewImage3(url);
+            }
+            function getUrlWithoutFrame() {
+                var url = document.getElementById('wadoURL').value;
+                var frameIndex = url.indexOf('frame=');
+                if (frameIndex !== -1) {
+                    url = url.substr(0, frameIndex - 1);
+                }
+                return url;
+            }
+            var element = document.getElementById('canvasgenerator2');
+            cornerstone.enable(element);
+            
+        </script>
     </section>
 
     <!-- General Section -->
