@@ -10,7 +10,7 @@ searchDoctor.addEventListener('submit', (e) => {
         snapshot.docs.forEach(doc => {
             console.log(doc.data().UserName);
             searchedDoctor['searchedDoctorName'].value = doc.data().UserName;
-            searchedDoctor['searchedDoctorName'].setAttribute('data-id',doc.id);
+            searchedDoctor['searchedDoctorName'].setAttribute('data-id', doc.id);
             searchedDoctor.style.display = 'block';
         });
 
@@ -18,7 +18,7 @@ searchDoctor.addEventListener('submit', (e) => {
 })
 
 //sent to doctor
-searchedDoctor.addEventListener('submit',(e)=>{
+searchedDoctor.addEventListener('submit', (e) => {
     e.preventDefault();
     console.log(searchedDoctor['searchedDoctorName'].getAttribute('data-id'));
     console.log(patientFilePreview.getAttribute('data-id'));
@@ -27,9 +27,9 @@ searchedDoctor.addEventListener('submit',(e)=>{
         if (doc_list.includes(searchedDoctor['searchedDoctorName'].getAttribute('data-id'))) {
             alert('already shared');
         } else {
-            doc_list=doc_list.concat([searchedDoctor['searchedDoctorName'].getAttribute('data-id')]);
+            doc_list = doc_list.concat([searchedDoctor['searchedDoctorName'].getAttribute('data-id')]);
             console.log(doc_list);
-            db.collection('file').doc(patientFilePreview.getAttribute('data-id')).update({DocList:doc_list});
+            db.collection('file').doc(patientFilePreview.getAttribute('data-id')).update({ DocList: doc_list });
             alert('shared successfully');
         }
     })
@@ -62,6 +62,7 @@ const PatientFileListGen = (docu) => {
                     </div>
                 <div id="${docu.id}" class="collapse card-body">${docu.data().FileName}<br>${docu.data().FileType}<button
                                         class="float-right btn btn-primary ${docu.id}" onclick="patselectFile(this,${docu.id})">view</button>
+                                        <div class="btn btn-primary" onclick="patselectdicomFile(this,${docu.id})">view(DICOM)</div>
                 </div>
             </div>`
             console.log(doc.data());
@@ -72,15 +73,28 @@ const PatientFileListGen = (docu) => {
         patientfileList.innerHTML = '';
     }
 }
-function patselectFile(self, id) {
-    console.log(id.getAttribute('id'));
-    patientFilePreview.setAttribute('data-id',id.getAttribute('id'))
+function patselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
-        let patPreview =
-        `<img src=${doc.data().FileUrl} style="width:300px;">
-        `
-        patientFilePreview.innerHTML=patPreview;
+        ploadAndViewImage(doc.data().DicomUrl);
+        document.getElementById('output').style.display = 'none';
+        document.getElementsByTagName('canvas')[0].style.display = 'block';
+    })
+
+}
+
+function patselectFile(self, id) {
+    console.log(id.getAttribute('id'));
+    patientFilePreview.setAttribute('data-id', id.getAttribute('id'))
+    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
+        console.log(doc.data());
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('src', doc.data().FileUrl);
+            item.style.display = 'block';
+        });
+        /*document.getElementById('output').setAttribute('src', doc.data().FileUrl);
+        document.getElementById('output').style.display = 'block';
+        document.getElementsByTagName('canvas')[0].style.display = 'none';*/
     })
 }
 

@@ -11,7 +11,9 @@ fileForm.addEventListener('submit', (e) => {
     const FileType = fileForm['FileType'].value;
     const Notes = fileForm['Notes'].value;
     const PatientId = searchPatient.getAttribute('data-id');
-    console.log(PatientId);
+    const DicomUrl=document.getElementsByTagName('canvas')[0].getAttribute('data-id');
+    console.log(DicomUrl.length);
+    var docId
     db.collection('file').add({
         FileName: FileName,
         FileType: FileType,
@@ -21,8 +23,28 @@ fileForm.addEventListener('submit', (e) => {
         DocList: [],
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         FileUrl: document.getElementById('output').src,
-        DicomUrl:document.getElementsByTagName('canvas')[0].getAttribute('data-id'),
+        DicomUrl: DicomUrl,
+    }).then(function(docRef) {
+        docId=docRef.id;
+        console.log("Document written with ID: ", docRef.id);
     });
+    if(DicomUrl.length>0){
+        var canvas = document.getElementsByTagName('canvas')[0];
+        canvas.toBlob(function(blob) {
+            url = URL.createObjectURL(blob);
+      storageRef.child(FileName).put(blob).then(function(snapshot) {
+        console.log('Uploaded a blob or file!');
+        snapshot.ref.getDownloadURL().then(function (url) {
+            console.log('File available at', url);
+            db.collection('file').doc(docId).update({
+                FileUrl:url
+            })
+        });
+      });
+      
+        //document.body.appendChild(newImg);
+      });
+    }
 })
 //image handling
 
@@ -47,11 +69,16 @@ var loadFile = function (event) {
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
-                console.log('File available at', url);
+                //console.log('File available at', url);
                 // [START_EXCLUDE]
                 //document.getElementById('output').src =  url ;
-                radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">
-              `
+                //radioFilePreview.innerHTML = `<img src=${url} id='output' style="width:300px;">`
+                document.getElementById('output').setAttribute('src',url);
+                document.getElementsByTagName('canvas')[0].setAttribute('data-id', "");
+                
+                document.getElementById('output').style.display = 'block';
+                document.getElementsByTagName('canvas')[0].style.display = 'none';
+
                 // [END_EXCLUDE]
             });
         }).catch(function (error) {
@@ -76,7 +103,17 @@ var loadFile = function (event) {
                 // image enable the dicomImage element and activate a few tools
                 loadAndViewImage(url);
                 var canvas = document.getElementsByTagName('canvas')[0];
-                canvas.setAttribute('data-id',url);
+                canvas.setAttribute('data-id', url);
+                //document.getElementById('output').style.display = 'none';
+                document.getElementsByTagName('canvas')[0].style.display = 'block';
+                /*canvas.toBlob(function(blob) {
+                        url = URL.createObjectURL(blob);
+                  storageRef.child('DICOM2').put(blob).then(function(snapshot) {
+                    console.log('Uploaded a blob or file!');
+                  });
+                  document.getElementById('output').setAttribute('src',url);
+                    //document.body.appendChild(newImg);
+                  });*/
                 // [END_EXCLUDE]
             });
         }).catch(function (error) {
@@ -132,6 +169,7 @@ const RadioFileListGen = (docu) => {
                     </div>
                 <div id="${docu.id}" class="collapse card-body">${docu.data().FileName}<br>${docu.data().FileType}<div
                                         class="float-right btn btn-primary ${docu.id}" onclick="radselectFile(this,${docu.id})">view</div>
+                                        <div class="btn btn-primary" onclick="radselectdicomFile(this,${docu.id})">view(DICOM)</div>
                 </div>
             </div>`
             console.log(doc.data());
@@ -142,15 +180,37 @@ const RadioFileListGen = (docu) => {
         radiofileList.innerHTML = '';
     }
 }
-function radselectFile(self, id) {
-    console.log(id.getAttribute('id'));
-   // radioFilePreview.setAttribute('data-id', id.getAttribute('id'))
+function radselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
-        let radPreview =
-            `<img src=${doc.data().FileUrl} style="width:300px;">
-            <canvas width="300" height="300" style="width: 300px; height: 300px;"></canvas>
-            `
-        radioFilePreview.innerHTML = radPreview;
+        loadAndViewImage(doc.data().DicomUrl);
+        document.getElementById('output').style.display = 'none';
+        document.getElementsByTagName('canvas')[0].style.display = 'block';
+
+    })
+}
+
+
+
+
+
+
+function radselectFile(self, id) {
+    console.log(id.getAttribute('id'));
+    // radioFilePreview.setAttribute('data-id', id.getAttribute('id'))
+    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
+        console.log(doc.data());
+        //let radPreview =
+        //    `<img src=${doc.data().FileUrl} style="width:300px;">
+        //   
+        //    `
+        //radioFilePreview.innerHTML = radPreview;
+        /*document.getElementById('output').setAttribute('src', doc.data().FileUrl);
+        document.getElementById('output').style.display = 'block';
+        document.getElementsByTagName('canvas')[0].style.display = 'none';*/
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('src', doc.data().FileUrl);
+            item.style.display = 'block';
+        });
     })
 }
