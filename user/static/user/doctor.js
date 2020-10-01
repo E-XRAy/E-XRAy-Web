@@ -15,6 +15,31 @@ const doctorFilePreview = document.querySelector('#doctorFilePreview')
     })
 })*/
 
+searchDoctor.addEventListener('submit',(e)=>{
+    var doctorEmailorPhone=document.getElementById('doctorEmailorPhone').value;
+    console.log(doctorEmailorPhone);
+    var filename
+    var fileType
+    var content
+    var url
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+    userfiles.collection('files')
+        .doc(document.getElementById('output')
+            .getAttribute('data-id')).get().then(doc => {
+                console.log(doc.data());
+                filename = doc.data().filename;
+                fileType = doc.data().fileType;
+                content = doc.data().content;
+                url = doc.data().url;
+                var doctuserfiles = db.collection('Files').doc(doctorEmailorPhone);
+                doctuserfiles.collection('files').add({
+                    filename: filename,
+                    fileType: fileType,
+                    content: content,
+                    url: url,
+                })
+            })
+})
 
 
 function docselectdicomFile(self, id) {

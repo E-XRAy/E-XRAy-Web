@@ -11,14 +11,14 @@ fileForm.addEventListener('submit', (e) => {
     const fileType = fileForm['FileType'].value;
     const content = fileForm['Notes'].value;
     const url = document.getElementById('output').src;
-    console.log(filename,fileType,content,url);
+    console.log(filename, fileType, content, url);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').add({
-        filename:filename,
-        fileType:fileType,
-        content:content,
-        url:url,
-        })
+        filename: filename,
+        fileType: fileType,
+        content: content,
+        url: url,
+    })
     //const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
     /*console.log(DicomUrl.length);
     var docId
@@ -129,16 +129,27 @@ searchPatient.addEventListener('submit', (e) => {
     e.preventDefault();
     const searchPatientName = searchPatient['search-patient-name'].value;
     console.log(searchPatientName);
-    /*db.collection('users').where('EmailId', '==', searchPatientName).where('UserType', '==', 'Patient').get().then((snapshot) => {
-        snapshot.docs.forEach(doc => {
-            searchPatient.setAttribute('data-id', doc.id);
-            console.log(doc.data().UserName)
-            fileForm['searchedPatientName'].value = doc.data().UserName;
-            fileForm['searchedPatientName'].disabled = 'true';
-            searchPatientSuccess.style.display = 'block';
-        });
-
-    })*/
+    var filename
+    var fileType
+    var content
+    var url
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+    userfiles.collection('files')
+        .doc(document.getElementById('output')
+            .getAttribute('data-id')).get().then(doc => {
+                console.log(doc.data());
+                filename = doc.data().filename;
+                fileType = doc.data().fileType;
+                content = doc.data().content;
+                url = doc.data().url;
+                var patientuserfiles = db.collection('Files').doc(searchPatientName);
+                patientuserfiles.collection('files').add({
+                    filename: filename,
+                    fileType: fileType,
+                    content: content,
+                    url: url,
+                })
+            })
 });
 
 

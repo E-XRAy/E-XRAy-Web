@@ -168,7 +168,7 @@
                             <label for="DesignId">Designation Id</label>
                             <input id="signup-designid" class="form-control-sm col-sm-6" style="border-radius: 10px;"
                                 type="text" placeholder="Enter Designation Id name" name="DesignId" required><br>
-                            
+
                         </div>
                         <div class="form-row">
                             <button type="button" class="btn btn-secondary btn-sm ml-auto"
@@ -182,7 +182,7 @@
     </div>
 
     <!-- Radiologist Section -->
-    
+
 
 
     <section id="radiologist" style="display: none;">
@@ -203,7 +203,7 @@
                     </form>
                 </div>
                 <div class="col-md-4 col-sm-3">
-                    
+
                     <form id="radio-files-form">
                         <div class="form pt-2">
                             <section id="searchPatientSuccess">
@@ -249,7 +249,7 @@
         </div>
 
 
-        
+
         <br>
 
         <script>
@@ -263,10 +263,10 @@
             var loaded = false;
             function loadAndViewImage(imageId) {
                 var canvas = document.getElementsByTagName('canvas')[0];
-                canvas.width=300;
-                canvas.height=300;
+                canvas.width = 300;
+                canvas.height = 300;
                 canvas.style.height = "300px";
-                canvas.style.width ="300px" ;
+                canvas.style.width = "300px";
                 var element = document.getElementById('canvasgenerator');
                 try {
                     var start = new Date().getTime();
@@ -319,7 +319,7 @@
                     alert(err);
                 }
             }
-            
+
             function downloadAndView() {
                 let url = document.getElementById('wadoURL').value;
                 // prefix the url with wadouri: so cornerstone can find the image loader
@@ -337,7 +337,7 @@
             }
             var element = document.getElementById('canvasgenerator');
             cornerstone.enable(element);
-            
+
         </script>
 
     </section>
@@ -354,7 +354,7 @@
                         <div id="canvasgenerator1"></div>
                     </div>
                     <div class="container">
-                        <form id="searchDoctor" class="form-inline" method="POST" onsubmit="return false">
+                        <form id="searchDoctor" class="form-inline" onsubmit="return false">
                             <input id="doctorEmailorPhone" type="text" class="form-control col-sm-8 mr-2 mb-2 mt-3"
                                 style="border-radius: 10px" tabindex="1" placeholder="Enter Email or PhoneNumber">
                             <button type="submit" class="btn btn-outline-primary mt-1" style="border-radius: 10px"><i
@@ -370,7 +370,6 @@
                         </form>
                     </div>
                 </div>
-
                 <div class="col-md-4 col-sm-6">
                     <div class="jumbotron mt-3" style="border-radius: 50px;">
                         <form class="form-inline" method="POST" onsubmit="return false">
@@ -397,10 +396,10 @@
                 var loaded = false;
                 function loadAndViewImage2(imageId) {
                     var canvas = document.getElementsByTagName('canvas')[1];
-                    canvas.width=300;
-                    canvas.height=300;
+                    canvas.width = 300;
+                    canvas.height = 300;
                     canvas.style.height = "300px";
-                    canvas.style.width ="300px" ;
+                    canvas.style.width = "300px";
                     var element = document.getElementById('canvasgenerator1');
                     try {
                         var start = new Date().getTime();
@@ -419,17 +418,17 @@
                                 cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
                                 loaded = true;
                             }
-    
+
                             function getTransferSyntax() {
                                 const value = image.data.string('x00020010');
                                 return value + ' [' + uids[value] + ']';
                             }
-    
+
                             function getSopClass() {
                                 const value = image.data.string('x00080016');
                                 return value + ' [' + uids[value] + ']';
                             }
-    
+
                             function getPixelRepresentation() {
                                 const value = image.data.uint16('x00280103');
                                 if (value === undefined) {
@@ -437,7 +436,7 @@
                                 }
                                 return value + (value === 0 ? ' (unsigned)' : ' (signed)');
                             }
-    
+
                             function getPlanarConfiguration() {
                                 const value = image.data.uint16('x00280006');
                                 if (value === undefined) {
@@ -453,7 +452,7 @@
                         alert(err);
                     }
                 }
-                
+
                 function downloadAndView() {
                     let url = document.getElementById('wadoURL').value;
                     // prefix the url with wadouri: so cornerstone can find the image loader
@@ -471,7 +470,7 @@
                 }
                 var element = document.getElementById('canvasgenerator1');
                 cornerstone.enable(element);
-                
+
             </script>
     </section>
     <!-- Doctor Section -->
@@ -517,10 +516,10 @@
             var loaded = false;
             function loadAndViewImage3(imageId) {
                 var canvas = document.getElementsByTagName('canvas')[2];
-                canvas.width=300;
-                canvas.height=300;
+                canvas.width = 300;
+                canvas.height = 300;
                 canvas.style.height = "300px";
-                canvas.style.width ="300px" ;
+                canvas.style.width = "300px";
                 var element = document.getElementById('canvasgenerator2');
                 try {
                     var start = new Date().getTime();
@@ -573,7 +572,7 @@
                     alert(err);
                 }
             }
-            
+
             function downloadAndView() {
                 let url = document.getElementById('wadoURL').value;
                 // prefix the url with wadouri: so cornerstone can find the image loader
@@ -591,7 +590,7 @@
             }
             var element = document.getElementById('canvasgenerator2');
             cornerstone.enable(element);
-            
+
         </script>
     </section>
 
