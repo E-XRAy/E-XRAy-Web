@@ -1,15 +1,13 @@
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
-    apiKey: "AIzaSyD6PC6QQ9u5spFX8_CvZ5pOIzupRWtDpEk",
-    authDomain: "exray-trial.firebaseapp.com",
-    databaseURL: "https://exray-trial.firebaseio.com",
-    projectId: "exray-trial",
-    storageBucket: "exray-trial.appspot.com",
-    messagingSenderId: "924340290366",
-    appId: "1:924340290366:web:af7600fb775bb90259a26f",
-    measurementId: "G-WXCG6RWVZE"
+    apiKey: "AIzaSyC9l5dcHOzEtZ8_LMKx7CO3WM7Nh5V_Snk",
+    authDomain: "e-xray-87d05.firebaseapp.com",
+    databaseURL: "https://e-xray-87d05.firebaseio.com",
+    projectId: "e-xray-87d05",
+    storageBucket: "e-xray-87d05.appspot.com",
+    messagingSenderId: "106905977677",
+    appId: "1:106905977677:web:37ee7de772b55056382d04",
+    measurementId: "G-NX9C6NLWXD"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
