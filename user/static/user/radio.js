@@ -7,12 +7,20 @@ const radioFilePreview = document.querySelector('#radioFilePreview');
 
 fileForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const FileName = fileForm['FileName'].value;
-    const FileType = fileForm['FileType'].value;
-    const Notes = fileForm['Notes'].value;
-    const PatientId = searchPatient.getAttribute('data-id');
-    const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
-    console.log(DicomUrl.length);
+    const filename = fileForm['FileName'].value;
+    const fileType = fileForm['FileType'].value;
+    const content = fileForm['Notes'].value;
+    const url = document.getElementById('output').src;
+    console.log(filename,fileType,content,url);
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+    userfiles.collection('files').add({
+        filename:filename,
+        fileType:fileType,
+        content:content,
+        url:url,
+        })
+    //const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
+    /*console.log(DicomUrl.length);
     var docId
     db.collection('file').add({
         FileName: FileName,
@@ -42,7 +50,7 @@ fileForm.addEventListener('submit', (e) => {
                 });
             });
         });
-    }
+    }*/
 })
 //image handling
 
@@ -121,7 +129,7 @@ searchPatient.addEventListener('submit', (e) => {
     e.preventDefault();
     const searchPatientName = searchPatient['search-patient-name'].value;
     console.log(searchPatientName);
-    db.collection('users').where('EmailId', '==', searchPatientName).where('UserType', '==', 'Patient').get().then((snapshot) => {
+    /*db.collection('users').where('EmailId', '==', searchPatientName).where('UserType', '==', 'Patient').get().then((snapshot) => {
         snapshot.docs.forEach(doc => {
             searchPatient.setAttribute('data-id', doc.id);
             console.log(doc.data().UserName)
@@ -130,46 +138,10 @@ searchPatient.addEventListener('submit', (e) => {
             searchPatientSuccess.style.display = 'block';
         });
 
-    })
+    })*/
 });
 
 
-//realtime listener of files collection
-/*db.collection('file').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if (change.doc.data().RadiologistId == auth.currentUser.uid) {
-            if (change.type == 'added') {
-                RadioFileListGen(change.doc);
-            }
-        }
-
-    })
-})*/
-
-
-const RadioFileListGen = (docu) => {
-    if (docu) {
-        db.collection('users').doc(docu.data().PatientId).get().then(doc => {
-            var PatName = doc.data().UserName;
-            const html =
-                `<div class="card mt-1" style="border-radius: 10px;">
-                <div class="card-title pl-5 pt-1" aria-expanded="true" aria-controls="demo"
-                                    data-target="#${docu.id}" data-toggle="collapse">${docu.data().FileName},${PatName}
-                    </div>
-                <div id="${docu.id}" class="collapse card-body">${docu.data().FileName}<br>${docu.data().FileType}<div
-                                        class="float-right btn btn-primary ${docu.id}" onclick="radselectFile(this,${docu.id})">view</div>
-                                        <div class="btn btn-primary" onclick="radselectdicomFile(this,${docu.id})">view(DICOM)</div>
-                </div>
-            </div>`
-            console.log(doc.data());
-            radiofileList.innerHTML = radiofileList.innerHTML + html;
-        })
-
-    } else {
-        radiofileList.innerHTML = '';
-    }
-}
 function radselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
@@ -185,14 +157,3 @@ function radselectdicomFile(self, id) {
 
 
 
-function radselectFile(self, id) {
-    console.log(id.getAttribute('id'));
-    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
-        console.log(doc.data());
-        
-        document.querySelectorAll('#output').forEach(item => {
-            item.setAttribute('src', doc.data().FileUrl);
-            item.style.display = 'block';
-        });
-    })
-}

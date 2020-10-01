@@ -29,18 +29,17 @@ signupForm.addEventListener('submit', (e) => {
     const phno = signupForm['signup-phoneno'].value;
     const usrname = signupForm['signup-username'].value;
     const usrtype = signupForm['signup-usertype'].value;
-    const address = signupForm['signup-address'].value;
+    
 
 
     if (passwd1 == passwd2) {
         auth.createUserWithEmailAndPassword(email, passwd2).then(cred => {
-            return db.collection('users').doc(cred.user.uid).set({
+            return db.collection('Users').doc(cred.user.email).set({
                 UserType: usrtype,
-                EmailId: email,
-                PhoneNumber: phno,
-                UserName: usrname,
-                DesId: desid,
-                Address:address
+                Email: email,
+                Phone: phno,
+                Name: usrname,
+                userId: desid,
             });
         }).then(() => {
             signupForm.reset();
@@ -71,42 +70,78 @@ logout.addEventListener('click', (e) => {
 ///listen to auth status changes
 auth.onAuthStateChanged(user => {
     if (user) {
-        PatientFileListGen();
-        RadioFileListGen();
-        DoctorFileListGen();
         console.log('user logged in :', user.uid);
         //getting data
         setupNav(user);
-        db.collection('users').doc(user.uid).get().then((snapshot) => {
+        db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
+            console.log(snapshot.data());
             setupProfile(snapshot.data());
             setupHome(snapshot.data().UserType);
+            
         });
-        db.collection('file').onSnapshot(snapshot => {
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('src', '');
+            item.setAttribute('data-id', '');
+            item.style.display = 'none';
+        });
+        var userfiles = db.collection('Files').doc(auth.currentUser.email);
+        userfiles.collection('files').onSnapshot((snapshot) => {
             let changes = snapshot.docChanges();
             changes.forEach(change => {
-                if (change.doc.data().RadiologistId == user.uid) {
-                    if (change.type == 'added') {
-                        console.log(change.doc.data());
-                        RadioFileListGen(change.doc);
-                    }
-                }else if (change.doc.data().PatientId == user.uid) {
-                    if (change.type == 'added') {
-                        console.log(change.doc.data());
-                        PatientFileListGen(change.doc);
-                    }
-                }else if (change.doc.data().DocList.includes(auth.currentUser.uid)) {
-                    if (change.type == 'added') {
-                        DoctorFileListGen(change.doc);
-                    }
+                if (change.type == 'added') {
+                    //console.log(change.doc.data());
+                   FileListGen(change.doc);
+                   // PatientFileListGen(change.doc.data());
+                    // RadioFileListGen(change.doc.data());
                 }
-        
-            })
-        }),function (error) {
-            console.log(error.message);
-        };
+            });
+        })
+
     } else {
         setupHome();
         setupNav();
         setupProfile();
     }
 });
+const FileListGen = (doc) => {
+    if (doc.data()) {
+        console.log(doc.data());
+        const html =
+            `<div class="card mt-1" style="border-radius: 10px;">
+                <div class="card-title pl-5 pt-1" aria-expanded="true" aria-controls="demo"
+                                    data-target="#${doc.id}" data-toggle="collapse">${doc.data().filename}
+                    </div>
+                <div id="${doc.id}" class="collapse card-body">${doc.data().content}
+                <button class="float-right btn btn-primary" onclick="docselectFile(this,'${doc.id}')">view</button>
+                <div class="btn btn-primary" onclick="docselectdicomFile(this,${doc.id})">view(DICOM)</div>
+                </div>
+            </div>`
+        db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
+            if (snapshot.data().UserType == 'Radiologist') {
+                radiofileList.innerHTML = radiofileList.innerHTML + html;
+            } else if (snapshot.data().UserType == 'Patient') {
+                patientfileList.innerHTML = patientfileList.innerHTML + html;
+            } else if (snapshot.data().UserType == 'Doctor') {
+                doctorfileList.innerHTML = doctorfileList.innerHTML + html;
+            }
+        });
+        
+    } else {
+        doctorfileList.innerHTML = '';
+        patientfileList.innerHTML = '';
+        radiofileList.innerHTML = '';
+    }
+}
+
+function docselectFile(self, id) {
+    console.log(id);
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+        userfiles.collection('files').doc(id).get().then(doc=>{
+            console.log(doc.data());
+            document.querySelectorAll('#output').forEach(item => {
+                item.setAttribute('src', doc.data().url);
+                item.setAttribute('data-id', id);
+                item.style.display = 'block';
+            });
+        })
+}

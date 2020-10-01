@@ -5,17 +5,6 @@ const loggedInLinks = document.querySelectorAll('.logged-in');
 const accountDetails = document.querySelector('.account-details');
 const setupNav = (user) => {
     if (user) {
-        /*db.collection('users').doc(user.uid).get().then(doc => {
-          const html = `
-          <div>Logged In as ${user.email}</div>
-          <div>${doc.data().bio}</div>
-          `;
-          accountDetails.innerHTML = html;
-    
-        }).catch(function (error) {
-          console.log("scene");
-        });
-        */
         loggedInLinks.forEach(item => item.style.display = 'block');
         loggedOutLinks.forEach(item => item.style.display = 'none');
     } else {
@@ -59,11 +48,11 @@ const userDetails = document.querySelector('#userDetails');
 const setupProfile = (data) => {
     if (data) {
         const html = `
-        <div>User Name:${data.UserName}</div>
-        <div><small>Phone:${data.PhoneNumber}</small></div>
-        <div><small>Email Id:${data.EmailId}</small></div>
-        <div><small>Designation Id:${data.DesId}</small></div>
-        <div><small>Address:${data.Address}</small></div>
+        <div>User Name:${data.Name}</div>
+        <div><small>Phone:${data.Phone}</small></div>
+        <div><small>Email Id:${data.Email}</small></div>
+        <div><small>Designation Id:${data.userId}</small></div>
+       
         `;
         userDetails.innerHTML = html;
       }else{

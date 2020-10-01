@@ -168,9 +168,7 @@
                             <label for="DesignId">Designation Id</label>
                             <input id="signup-designid" class="form-control-sm col-sm-6" style="border-radius: 10px;"
                                 type="text" placeholder="Enter Designation Id name" name="DesignId" required><br>
-                            <label for="Address">Address</label>
-                            <input id="signup-address" class="form-control-sm col-sm-6" style="border-radius: 10px;"
-                                type="text" placeholder="Enter Address" name="Address" required>
+                            
                         </div>
                         <div class="form-row">
                             <button type="button" class="btn btn-secondary btn-sm ml-auto"
@@ -196,8 +194,6 @@
                         <p><img id="output" width="300" /></p>
                         <div id="canvasgenerator"></div>
                     </div>
-                </div>
-                <div class="col-md-4 col-sm-3">
                     <form class="form-inline" id="search-patient" onsubmit="return false">
                         <input type="text" id="search-patient-name" class="form-control col-sm-8 mr-2 mb-2 mt-3"
                             style="border-radius: 10px" tabindex="1" placeholder="Enter Email">
@@ -205,14 +201,12 @@
                                 class="fa fa-search" aria-hidden="true">Patient</i>
                         </button>
                     </form>
+                </div>
+                <div class="col-md-4 col-sm-3">
+                    
                     <form id="radio-files-form">
                         <div class="form pt-2">
-                            <section id="searchPatientSuccess" style="display: none;"><label
-                                    for="searchedPatientName">Patient Name</label>
-
-
-                                <input id="searchedPatientName" class="form-control-sm col-sm-6"
-                                    style="border-radius: 10px;" type="text" name="searchedPatientName" required><br>
+                            <section id="searchPatientSuccess">
                                 <div class="custom-file mb-1"><input type="file" class="custom-file-input"
                                         id="customFile" onchange="loadFile(event)" name="filename">
                                     <label class="custom-file-label" for="customFile">Choose file</label></div>
@@ -225,11 +219,11 @@
                                     <option value="MRI">MRI</option>
                                     <option value="UltraSound">UltraSound</option>
                                 </select><br>
-                                <label for="Notes">Notes</label>
+                                <label for="Notes">Content:</label>
                                 <textarea class=" ml-0" style="border-radius: 5px; background-color:floralwhite"
                                     class="form-control" name="Notes" id="Notes" rows="2" cols="40"></textarea>
                                 <button type="submit" class="btn btn-outline-primary"
-                                    style="border-radius: 10px; float: right;">Sent<i class="fa fa-paper-plane"
+                                    style="border-radius: 10px; float: right;">Upload<i class="fa fa-upload"
                                         aria-hidden="true"></i>
                                 </button>
                             </section>

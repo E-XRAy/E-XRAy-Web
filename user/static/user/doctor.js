@@ -16,28 +16,7 @@ const doctorFilePreview = document.querySelector('#doctorFilePreview')
 })*/
 
 
-const DoctorFileListGen = (docu) => {
-    if (docu) {
-        db.collection('users').doc(docu.data().PatientId).get().then(doc => {
-            var PatName = doc.data().UserName;
-            const html =
-                `<div class="card mt-1" style="border-radius: 10px;">
-                <div class="card-title pl-5 pt-1" aria-expanded="true" aria-controls="demo"
-                                    data-target="#${docu.id}" data-toggle="collapse">${docu.data().FileName},${PatName}
-                    </div>
-                <div id="${docu.id}" class="collapse card-body">${docu.data().FileName}<br>${docu.data().FileType}
-                <button class="float-right btn btn-primary ${docu.id}" onclick="docselectFile(this,${docu.id})">view</button>
-                <div class="btn btn-primary" onclick="docselectdicomFile(this,${docu.id})">view(DICOM)</div>
-                </div>
-            </div>`
-            console.log(docu.data());
-            doctorfileList.innerHTML = doctorfileList.innerHTML + html;
-        })
 
-    } else {
-        doctorfileList.innerHTML = '';
-    }
-}
 function docselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
@@ -51,9 +30,9 @@ function docselectdicomFile(self, id) {
 
 
 //Preview files
-function docselectFile(self, id) {
+/*function docselectFile(self, id) {
     console.log(id.getAttribute('id'));
-    doctorFilePreview.setAttribute('data-id',id.getAttribute('id'))
+    doctorFilePreview.setAttribute('data-id', id.getAttribute('id'))
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         document.querySelectorAll('#output').forEach(item => {
@@ -61,4 +40,4 @@ function docselectFile(self, id) {
             item.style.display = 'block';
         });
     })
-}
+}*/
