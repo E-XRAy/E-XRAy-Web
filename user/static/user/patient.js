@@ -73,7 +73,7 @@ const PatientFileListGen = (docu) => {
         patientfileList.innerHTML = '';
     }
 }
-function patselectdicomFile(self, id) {
+/*function patselectdicomFile(self, id) {
     db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         loadAndViewImage2(doc.data().DicomUrl);
@@ -81,7 +81,7 @@ function patselectdicomFile(self, id) {
         document.getElementsByTagName('canvas')[1].style.display = 'block';
     })
 
-}
+}*/
 
 function patselectFile(self, id) {
     console.log(id.getAttribute('id'));

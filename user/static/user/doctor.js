@@ -22,6 +22,7 @@ searchDoctor.addEventListener('submit',(e)=>{
     var fileType
     var content
     var url
+    var DicomUrl
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files')
         .doc(document.getElementById('output')
@@ -31,12 +32,14 @@ searchDoctor.addEventListener('submit',(e)=>{
                 fileType = doc.data().fileType;
                 content = doc.data().content;
                 url = doc.data().url;
+                DicomUrl = doc.data().DicomUrl;
                 var doctuserfiles = db.collection('Files').doc(doctorEmailorPhone);
                 doctuserfiles.collection('files').add({
                     filename: filename,
                     fileType: fileType,
                     content: content,
                     url: url,
+                    DicomUrl: DicomUrl,
                 })
             })
 })

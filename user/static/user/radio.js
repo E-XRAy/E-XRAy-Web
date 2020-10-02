@@ -8,20 +8,39 @@ const radioFilePreview = document.querySelector('#radioFilePreview');
 fileForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
-    console.log(DicomUrl);
+    console.log(DicomUrl.length);
     const filename = fileForm['FileName'].value;
     const fileType = fileForm['FileType'].value;
     const content = fileForm['Notes'].value;
     const url = document.getElementById('output').src;
-    console.log(filename, fileType, content, url);
+    var docId;
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').add({
         filename: filename,
         fileType: fileType,
         content: content,
         url: url,
-        DicomUrl:document.getElementsByTagName('canvas')[0].getAttribute('data-id'),
-    })
+        DicomUrl: document.getElementsByTagName('canvas')[0].getAttribute('data-id'),
+    }).then(function (docRef) {
+        docId = docRef.id;
+        console.log("Document written with ID: ", docRef.id);
+    });
+    if (DicomUrl.length > 0) {
+        var canvas = document.getElementsByTagName('canvas')[0];
+        canvas.toBlob(function (blob) {
+            bloburl = URL.createObjectURL(blob);
+            console.log(bloburl);
+            storageRef.child(filename).put(blob).then(function (snapshot) {
+                console.log('Uploaded a blob or file!');
+                snapshot.ref.getDownloadURL().then(function (url) {
+                    console.log('File available at', url);
+                    userfiles.collection('files').doc(docId).update({
+                        url: url
+                    })
+                });
+            });
+        });
+    }
     //const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
     /*console.log(DicomUrl.length);
     var docId
@@ -54,6 +73,7 @@ fileForm.addEventListener('submit', (e) => {
             });
         });
     }*/
+    fileForm.reset();
 })
 //image handling
 
@@ -136,6 +156,7 @@ searchPatient.addEventListener('submit', (e) => {
     var fileType
     var content
     var url
+    var DicomUrl
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files')
         .doc(document.getElementById('output')
@@ -145,12 +166,14 @@ searchPatient.addEventListener('submit', (e) => {
                 fileType = doc.data().fileType;
                 content = doc.data().content;
                 url = doc.data().url;
+                DicomUrl = doc.data().DicomUrl;
                 var patientuserfiles = db.collection('Files').doc(searchPatientName);
                 patientuserfiles.collection('files').add({
                     filename: filename,
                     fileType: fileType,
                     content: content,
                     url: url,
+                    DicomUrl: DicomUrl,
                 })
             })
 });

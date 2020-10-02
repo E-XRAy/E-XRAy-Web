@@ -61,6 +61,7 @@ logout.addEventListener('click', (e) => {
     e.preventDefault();
     auth.signOut().then(function () {
         console.log("user signed out");
+        location.reload();
     }).catch(function (error) {
         console.log("error during sign out");
     });
@@ -119,10 +120,16 @@ const FileListGen = (doc) => {
         db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
             if (snapshot.data().UserType == 'Radiologist') {
                 radiofileList.innerHTML = radiofileList.innerHTML + html;
+                doctorfileList.innerHTML = '';
+                patientfileList.innerHTML = '';
             } else if (snapshot.data().UserType == 'Patient') {
                 patientfileList.innerHTML = patientfileList.innerHTML + html;
+                radiofileList.innerHTML = '';
+                doctorfileList.innerHTML = '';
             } else if (snapshot.data().UserType == 'Doctor') {
                 doctorfileList.innerHTML = doctorfileList.innerHTML + html;
+                patientfileList.innerHTML = '';
+                radiofileList.innerHTML = '';
             }
         });
 
@@ -143,17 +150,39 @@ function docselectFile(self, id) {
             item.setAttribute('data-id', id);
             item.style.display = 'block';
         });
+        document.querySelectorAll('#canvasgenerator').forEach(item => {
+            item.style.display = 'none';
+        });
+        
     })
 }
 
 function selectdicomFile(self, id) {
+    console.log(self.parentNode.parentNode.parentNode.id);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id.getAttribute('id')).get().then(doc => {
         console.log(doc.data());
         loadAndViewImage(doc.data().DicomUrl);
+        document.querySelectorAll('#canvasgenerator').forEach(item => {
+            item.style.display = 'block';
+        });
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('data-id', doc.id);
+            item.style.display = 'none';
+        });
+    })
+}
+function patselectdicomFile(self, id) {
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+    userfiles.collection('files').doc(id.getAttribute('id')).get().then(doc => {
+        console.log(doc.data());
+        patloadAndViewImage(doc.data().DicomUrl);
         document.getElementById('output').style.display = 'none';
     })
 }
+
+
+
 cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
 cornerstoneWADOImageLoader.configure({
     beforeSend: function (xhr) {
@@ -163,27 +192,54 @@ cornerstoneWADOImageLoader.configure({
 });
 var loaded = false;
 function loadAndViewImage(imageId) {
-    var canvas = document.getElementsByTagName('canvas')[0];
-    canvas.width = 300;
-    canvas.height = 300;
-    canvas.style.height = "300px";
-    canvas.style.width = "300px";
-    var element = document.getElementById('canvasgenerator');
+    var canvas1 = document.getElementsByTagName('canvas')[0];
+    var canvas2 = document.getElementsByTagName('canvas')[1];
+    var canvas3 = document.getElementsByTagName('canvas')[2];
+    canvas1.width = 300;
+    canvas1.height = 300;
+    canvas1.style.height = "300px";
+    canvas1.style.width = "300px";
+    canvas2.width = 300;
+    canvas2.height = 300;
+    canvas2.style.height = "300px";
+    canvas2.style.width = "300px";
+    canvas3.width = 300;
+    canvas3.height = 300;
+    canvas3.style.height = "300px";
+    canvas3.style.width = "300px";
+    var element1 = document.querySelectorAll('#canvasgenerator')[0];
+    var element2 = document.querySelectorAll('#canvasgenerator')[1];
+    var element3 = document.querySelectorAll('#canvasgenerator')[2];
     try {
         var start = new Date().getTime();
+        console.log(imageId);
         cornerstone.loadAndCacheImage(imageId).then(function (image) {
             console.log(image);
-            var viewport = cornerstone.getDefaultViewportForImage(element, image);
-            cornerstone.displayImage(element, image, viewport);
-            console.log(element);
-            console.log(viewport);
+            var viewport1 = cornerstone.getDefaultViewportForImage(element1, image);
+            var viewport2 = cornerstone.getDefaultViewportForImage(element2, image);
+            var viewport3 = cornerstone.getDefaultViewportForImage(element3, image);
+            cornerstone.displayImage(element1, image, viewport1);
+            cornerstone.displayImage(element2, image, viewport2);
+            cornerstone.displayImage(element3, image, viewport3);
             if (loaded === false) {
-                cornerstoneTools.mouseInput.enable(element);
-                cornerstoneTools.mouseWheelInput.enable(element);
-                cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
-                cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
-                cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
-                cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
+                cornerstoneTools.mouseInput.enable(element1);
+                cornerstoneTools.mouseInput.enable(element2);
+                cornerstoneTools.mouseInput.enable(element3);
+                cornerstoneTools.mouseWheelInput.enable(element1);
+                cornerstoneTools.mouseWheelInput.enable(element2);
+                cornerstoneTools.mouseWheelInput.enable(element3);
+                cornerstoneTools.wwwc.activate(element1, 1); // ww/wc is the default tool for left mouse button
+                cornerstoneTools.wwwc.activate(element2, 1); // ww/wc is the default tool for left mouse button
+                cornerstoneTools.wwwc.activate(element3, 1); // ww/wc is the default tool for left mouse button
+                cornerstoneTools.pan.activate(element1, 2); // pan is the default tool for middle mouse button
+                cornerstoneTools.pan.activate(element2, 2); // pan is the default tool for middle mouse button
+                cornerstoneTools.pan.activate(element3, 2); // pan is the default tool for middle mouse button
+                cornerstoneTools.zoom.activate(element1, 4); // zoom is the default tool for right mouse button
+                cornerstoneTools.zoom.activate(element2, 4); // zoom is the default tool for right mouse button
+                cornerstoneTools.zoom.activate(element3, 4); // zoom is the default tool for right mouse button
+                cornerstoneTools.zoomWheel.activate(element1); // zoom is the default tool for middle mouse wheel
+                cornerstoneTools.zoomWheel.activate(element2); // zoom is the default tool for middle mouse wheel
+                cornerstoneTools.zoomWheel.activate(element3); // zoom is the default tool for middle mouse wheel
                 loaded = true;
             }
 
@@ -228,6 +284,10 @@ function getUrlWithoutFrame() {
     }
     return url;
 }
-var element = document.getElementById('canvasgenerator');
-cornerstone.enable(element);
+var element1 = document.querySelectorAll('#canvasgenerator')[0];
+var element2 = document.querySelectorAll('#canvasgenerator')[1];
+var element3 = document.querySelectorAll('#canvasgenerator')[2];
+cornerstone.enable(element1);
+cornerstone.enable(element2);
+cornerstone.enable(element3);
 
