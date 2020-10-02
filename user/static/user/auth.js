@@ -29,7 +29,7 @@ signupForm.addEventListener('submit', (e) => {
     const phno = signupForm['signup-phoneno'].value;
     const usrname = signupForm['signup-username'].value;
     const usrtype = signupForm['signup-usertype'].value;
-    
+
 
 
     if (passwd1 == passwd2) {
@@ -77,7 +77,7 @@ auth.onAuthStateChanged(user => {
             console.log(snapshot.data());
             setupProfile(snapshot.data());
             setupHome(snapshot.data().UserType);
-            
+
         });
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('src', '');
@@ -90,8 +90,8 @@ auth.onAuthStateChanged(user => {
             changes.forEach(change => {
                 if (change.type == 'added') {
                     //console.log(change.doc.data());
-                   FileListGen(change.doc);
-                   // PatientFileListGen(change.doc.data());
+                    FileListGen(change.doc);
+                    // PatientFileListGen(change.doc.data());
                     // RadioFileListGen(change.doc.data());
                 }
             });
@@ -113,7 +113,7 @@ const FileListGen = (doc) => {
                     </div>
                 <div id="${doc.id}" class="collapse card-body">${doc.data().content}
                 <button class="float-right btn btn-primary" onclick="docselectFile(this,'${doc.id}')">view</button>
-                <div class="btn btn-primary" onclick="docselectdicomFile(this,${doc.id})">view(DICOM)</div>
+                <div class="btn btn-primary" onclick="selectdicomFile(this,${doc.id})">view(DICOM)</div>
                 </div>
             </div>`
         db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
@@ -125,7 +125,7 @@ const FileListGen = (doc) => {
                 doctorfileList.innerHTML = doctorfileList.innerHTML + html;
             }
         });
-        
+
     } else {
         doctorfileList.innerHTML = '';
         patientfileList.innerHTML = '';
@@ -136,12 +136,98 @@ const FileListGen = (doc) => {
 function docselectFile(self, id) {
     console.log(id);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
-        userfiles.collection('files').doc(id).get().then(doc=>{
-            console.log(doc.data());
-            document.querySelectorAll('#output').forEach(item => {
-                item.setAttribute('src', doc.data().url);
-                item.setAttribute('data-id', id);
-                item.style.display = 'block';
-            });
-        })
+    userfiles.collection('files').doc(id).get().then(doc => {
+        console.log(doc.data());
+        document.querySelectorAll('#output').forEach(item => {
+            item.setAttribute('src', doc.data().url);
+            item.setAttribute('data-id', id);
+            item.style.display = 'block';
+        });
+    })
 }
+
+function selectdicomFile(self, id) {
+    var userfiles = db.collection('Files').doc(auth.currentUser.email);
+    userfiles.collection('files').doc(id.getAttribute('id')).get().then(doc => {
+        console.log(doc.data());
+        loadAndViewImage(doc.data().DicomUrl);
+        document.getElementById('output').style.display = 'none';
+    })
+}
+cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+cornerstoneWADOImageLoader.configure({
+    beforeSend: function (xhr) {
+        // Add custom headers here (e.g. auth tokens)
+        //xhr.setRequestHeader('APIKEY', 'my auth token');
+    }
+});
+var loaded = false;
+function loadAndViewImage(imageId) {
+    var canvas = document.getElementsByTagName('canvas')[0];
+    canvas.width = 300;
+    canvas.height = 300;
+    canvas.style.height = "300px";
+    canvas.style.width = "300px";
+    var element = document.getElementById('canvasgenerator');
+    try {
+        var start = new Date().getTime();
+        cornerstone.loadAndCacheImage(imageId).then(function (image) {
+            console.log(image);
+            var viewport = cornerstone.getDefaultViewportForImage(element, image);
+            cornerstone.displayImage(element, image, viewport);
+            console.log(element);
+            console.log(viewport);
+            if (loaded === false) {
+                cornerstoneTools.mouseInput.enable(element);
+                cornerstoneTools.mouseWheelInput.enable(element);
+                cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
+                cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
+                cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
+                cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
+                loaded = true;
+            }
+
+            function getTransferSyntax() {
+                const value = image.data.string('x00020010');
+                return value + ' [' + uids[value] + ']';
+            }
+
+            function getSopClass() {
+                const value = image.data.string('x00080016');
+                return value + ' [' + uids[value] + ']';
+            }
+
+            function getPixelRepresentation() {
+                const value = image.data.uint16('x00280103');
+                if (value === undefined) {
+                    return;
+                }
+                return value + (value === 0 ? ' (unsigned)' : ' (signed)');
+            }
+
+            function getPlanarConfiguration() {
+                const value = image.data.uint16('x00280006');
+                if (value === undefined) {
+                    return;
+                }
+                return value + (value === 0 ? ' (pixel)' : ' (plane)');
+            }
+        }, function (err) {
+            alert(err);
+        });
+    }
+    catch (err) {
+        alert(err);
+    }
+}
+function getUrlWithoutFrame() {
+    var url = document.getElementById('wadoURL').value;
+    var frameIndex = url.indexOf('frame=');
+    if (frameIndex !== -1) {
+        url = url.substr(0, frameIndex - 1);
+    }
+    return url;
+}
+var element = document.getElementById('canvasgenerator');
+cornerstone.enable(element);
+

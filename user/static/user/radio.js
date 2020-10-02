@@ -7,6 +7,8 @@ const radioFilePreview = document.querySelector('#radioFilePreview');
 
 fileForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
+    console.log(DicomUrl);
     const filename = fileForm['FileName'].value;
     const fileType = fileForm['FileType'].value;
     const content = fileForm['Notes'].value;
@@ -18,6 +20,7 @@ fileForm.addEventListener('submit', (e) => {
         fileType: fileType,
         content: content,
         url: url,
+        DicomUrl:document.getElementsByTagName('canvas')[0].getAttribute('data-id'),
     })
     //const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
     /*console.log(DicomUrl.length);
@@ -153,15 +156,7 @@ searchPatient.addEventListener('submit', (e) => {
 });
 
 
-function radselectdicomFile(self, id) {
-    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
-        console.log(doc.data());
-        loadAndViewImage(doc.data().DicomUrl);
-        document.getElementById('output').style.display = 'none';
-        document.getElementsByTagName('canvas')[0].style.display = 'block';
 
-    })
-}
 
 
 
