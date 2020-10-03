@@ -29,6 +29,8 @@ searchDoctor.addEventListener('submit',(e)=>{
                 })
             })
 })
+
+//Doctor to another doctor
 searchanotherDoctor.addEventListener('submit',(e)=>{
     var anotherdoctorEmail=document.getElementById('anotherdoctorEmail').value;
     console.log(anotherdoctorEmail);

@@ -52,6 +52,7 @@ const setupProfile = (data) => {
     if (data) {
         const html = `
         <div>User Name: ${data.Name}</div>
+        <section id='currentusername' data-id=${data.Name}><section>
         <div><small>Phone: ${data.Phone}</small></div>
         <div><small>Email Id: ${data.Email}</small></div>
         `;

@@ -61,7 +61,7 @@ const logout = document.querySelector('#logout');
 logout.addEventListener('click', (e) => {
     e.preventDefault();
     auth.signOut().then(function () {
-        console.log("user signed out");
+        alert("user signed out");
         location.reload();
     }).catch(function (error) {
         console.log("error during sign out");
