@@ -50,6 +50,7 @@ signupForm.addEventListener('submit', (e) => {
             var errorCode = error.code;
             var errorMessage = error.message;
             console.log(errorCode, errorMessage);
+            alert(errorMessage);
         });
     } else {
         alert("Passwords don't match");
@@ -116,8 +117,7 @@ const FileListGen = (doc) => {
                                     data-target="#${doc.id}" data-toggle="collapse">${doc.data().filename}
                     </div>
                 <div id="${doc.id}" class="collapse card-body">${doc.data().content}
-                <button class="float-right btn btn-primary" onclick="selectFile(this,'${doc.id}')">view</button>
-                <div class="btn btn-primary" onclick="selectdicomFile(this,'${doc.id}')">view(DICOM)</div>
+                <button class="float-right btn btn-primary" onclick="viewfunction(this,'${doc.id}','${doc.data().DicomUrl}')">view</button>
                 </div>
             </div>`
         db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
@@ -142,6 +142,14 @@ const FileListGen = (doc) => {
         radiofileList.innerHTML = '';
     }
 }
+function viewfunction(self,id,DicomUrl){
+	if(DicomUrl=='null' || DicomUrl==""){
+    	selectFile(this,id);
+    }else{
+    	selectdicomFile(self, id);
+    }
+}
+
 //Select and view Img File
 function selectFile(self, id) {
     console.log(id);
