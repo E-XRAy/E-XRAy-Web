@@ -112,7 +112,7 @@ var loadFile = function (event) {
 
 
 };
-
+//Senting file from radiologist to Patient
 searchPatient.addEventListener('submit', (e) => {
     e.preventDefault();
     const searchPatientName = searchPatient['search-patient-name'].value;
@@ -139,6 +139,7 @@ searchPatient.addEventListener('submit', (e) => {
                     content: content,
                     url: url,
                     DicomUrl: DicomUrl,
+                    RadName:document.getElementById('currentusername').getAttribute('data-id'),
                 }).then(function() {
                     alert("Succesfully sent");
                 })
