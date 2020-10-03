@@ -149,9 +149,16 @@ function docselectFile(self, id) {
         document.getElementById('search-patient').style.display='block';
         document.getElementById('searchDoctor').style.display='block';
         document.getElementById('searchanotherDoctor').style.display='block';
-
+        document.getElementById('patnotes').innerHTML=
+        `Radiologist Name:${doc.data().RadName} <br>
+        Notes By Radiologist:${doc.data().content}
+        `
         
-        document.getElementById('notes').innerHTML=doc.data().content;
+        document.getElementById('docnotes').innerHTML=
+            `Radiologist Name:${doc.data().RadName} <br>
+            Patient Name:${doc.data().PatName}<br>
+            Notes By Radiologist:${doc.data().content}
+            `
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('src', doc.data().url);
             item.setAttribute('data-id', id);
@@ -173,11 +180,19 @@ function selectdicomFile(self, id) {
         document.getElementById('search-patient').style.display='block';
         document.getElementById('searchDoctor').style.display='block';
         document.getElementById('searchanotherDoctor').style.display='block';
-        document.getElementById('notes').innerHTML=doc.data().content;
         loadAndViewImage(doc.data().DicomUrl);
         document.querySelectorAll('#canvasgenerator').forEach(item => {
             item.style.display = 'block';
         });
+        document.getElementById('patnotes').innerHTML=
+        `Radiologist Name:${doc.data().RadName} <br>
+        Notes By Radiologist:${doc.data().content}
+        `
+        document.getElementById('docnotes').innerHTML=
+            `Patient Name:${doc.data().PatName}<br>
+            Radiologist Name:${doc.data().RadName} <br>
+            Notes By Radiologist:${doc.data().content}
+            `
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('data-id', doc.id);
             item.style.display = 'none';

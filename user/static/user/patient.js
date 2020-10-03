@@ -35,18 +35,3 @@ searchedDoctor.addEventListener('submit', (e) => {
     })
 })
 
-function patselectFile(self, id) {
-    console.log(id.getAttribute('id'));
-    patientFilePreview.setAttribute('data-id', id.getAttribute('id'))
-    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
-        console.log(doc.data());
-        document.querySelectorAll('#output').forEach(item => {
-            item.setAttribute('src', doc.data().FileUrl);
-            item.style.display = 'block';
-        });
-        /*document.getElementById('output').setAttribute('src', doc.data().FileUrl);
-        document.getElementById('output').style.display = 'block';
-        document.getElementsByTagName('canvas')[0].style.display = 'none';*/
-    })
-}
-
