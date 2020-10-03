@@ -15,6 +15,7 @@ loginForm.addEventListener('submit', (e) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage);
+        alert(errorMessage);
     });
 })
 
@@ -145,6 +146,11 @@ function docselectFile(self, id) {
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
+        document.getElementById('search-patient').style.display='block';
+        document.getElementById('searchDoctor').style.display='block';
+        document.getElementById('searchanotherDoctor').style.display='block';
+
+        
         document.getElementById('notes').innerHTML=doc.data().content;
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('src', doc.data().url);
@@ -164,6 +170,9 @@ function selectdicomFile(self, id) {
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
+        document.getElementById('search-patient').style.display='block';
+        document.getElementById('searchDoctor').style.display='block';
+        document.getElementById('searchanotherDoctor').style.display='block';
         document.getElementById('notes').innerHTML=doc.data().content;
         loadAndViewImage(doc.data().DicomUrl);
         document.querySelectorAll('#canvasgenerator').forEach(item => {
@@ -175,14 +184,7 @@ function selectdicomFile(self, id) {
         });
     })
 }
-function patselectdicomFile(self, id) {
-    var userfiles = db.collection('Files').doc(auth.currentUser.email);
-    userfiles.collection('files').doc(id.getAttribute('id')).get().then(doc => {
-        console.log(doc.data());
-        patloadAndViewImage(doc.data().DicomUrl);
-        document.getElementById('output').style.display = 'none';
-    })
-}
+
 
 
 

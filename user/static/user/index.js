@@ -25,16 +25,19 @@ const setupHome = (UserType) => {
         general.style.display = 'none';
         doctor.style.display = 'none';
         patient.style.display = 'none';
+        document.querySelector('#sitehome').innerHTML=UserType+`'s Home`;
     } else if (UserType == 'Patient') {
         radiologist.style.display = 'none';
         general.style.display = 'none';
         doctor.style.display = 'none';
         patient.style.display = 'block';
+        document.querySelector('#sitehome').innerHTML=UserType+`'s Home`;
     } else if (UserType == 'Doctor') {
         radiologist.style.display = 'none';
         general.style.display = 'none';
         doctor.style.display = 'block';
         patient.style.display = 'none';
+        document.querySelector('#sitehome').innerHTML=UserType+`'s Home`;
     } else{
         radiologist.style.display = 'none';
         general.style.display = 'block';
@@ -48,11 +51,9 @@ const userDetails = document.querySelector('#userDetails');
 const setupProfile = (data) => {
     if (data) {
         const html = `
-        <div>User Name:${data.Name}</div>
-        <div><small>Phone:${data.Phone}</small></div>
-        <div><small>Email Id:${data.Email}</small></div>
-        <div><small>Designation Id:${data.userId}</small></div>
-       
+        <div>User Name: ${data.Name}</div>
+        <div><small>Phone: ${data.Phone}</small></div>
+        <div><small>Email Id: ${data.Email}</small></div>
         `;
         userDetails.innerHTML = html;
       }else{

@@ -1,10 +1,9 @@
-
 const searchPatientSuccess = document.querySelector('#searchPatientSuccess');
 const searchPatient = document.querySelector('#search-patient');
 const fileForm = document.querySelector('#radio-files-form');
 const radiofileList = document.querySelector('#radiofileList');
 const radioFilePreview = document.querySelector('#radioFilePreview');
-
+//file Uploading
 fileForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
@@ -30,7 +29,7 @@ fileForm.addEventListener('submit', (e) => {
         canvas.toBlob(function (blob) {
             bloburl = URL.createObjectURL(blob);
             console.log(bloburl);
-            storageRef.child(filename).put(blob).then(function (snapshot) {
+            storageRef.child('dicom_image/' +DicomUrl).put(blob).then(function (snapshot) {
                 console.log('Uploaded a blob or file!');
                 snapshot.ref.getDownloadURL().then(function (url) {
                     console.log('File available at', url);
@@ -50,7 +49,6 @@ fileForm.addEventListener('submit', (e) => {
     document.getElementById('uploadsuccess').style.display = 'none';
     fileForm.reset();
 })
-//image handling
 
 // Add the following code if you want the name of the file appear on select
 $(".custom-file-input").on("change", function () {
@@ -102,17 +100,7 @@ var loadFile = function (event) {
                 loadAndViewImage(url);
                 var canvas = document.getElementsByTagName('canvas')[0];
                 canvas.setAttribute('data-id', url);
-                //document.getElementById('output').style.display = 'none';
                 document.getElementsByTagName('canvas')[0].style.display = 'block';
-                /*canvas.toBlob(function(blob) {
-                        url = URL.createObjectURL(blob);
-                  storageRef.child('DICOM2').put(blob).then(function(snapshot) {
-                    console.log('Uploaded a blob or file!');
-                  });
-                  document.getElementById('output').setAttribute('src',url);
-                    //document.body.appendChild(newImg);
-                  });*/
-                // [END_EXCLUDE]
             });
         }).catch(function (error) {
             // [START onfailure]
@@ -151,15 +139,11 @@ searchPatient.addEventListener('submit', (e) => {
                     content: content,
                     url: url,
                     DicomUrl: DicomUrl,
+                }).then(function() {
+                    alert("Succesfully sent");
                 })
             })
 });
-
-
-
-
-
-
 
 
 

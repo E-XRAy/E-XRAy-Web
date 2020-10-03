@@ -35,54 +35,6 @@ searchedDoctor.addEventListener('submit', (e) => {
     })
 })
 
-
-
-//realtime listener of files collection
-/*db.collection('file').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if (change.doc.data().PatientId == auth.currentUser.uid) {
-            if (change.type == 'added') {
-                PatientFileListGen(change.doc);
-            }
-        }
-
-    })
-})*/
-
-
-const PatientFileListGen = (docu) => {
-    if (docu) {
-        db.collection('users').doc(auth.currentUser.uid).get().then(doc => {
-            var PatName = doc.data().UserName;
-            const html =
-                `<div class="card mt-1" style="border-radius: 10px;">
-                <div class="card-title pl-5 pt-1" aria-expanded="true" aria-controls="demo"
-                                    data-target="#${docu.id}" data-toggle="collapse">${docu.data().FileName},${PatName}
-                    </div>
-                <div id="${docu.id}" class="collapse card-body">${docu.data().FileName}<br>${docu.data().FileType}<button
-                                        class="float-right btn btn-primary ${docu.id}" onclick="patselectFile(this,${docu.id})">view</button>
-                                        <div class="btn btn-primary" onclick="patselectdicomFile(this,${docu.id})">view(DICOM)</div>
-                </div>
-            </div>`
-            console.log(doc.data());
-            patientfileList.innerHTML = patientfileList.innerHTML + html;
-        })
-
-    } else {
-        patientfileList.innerHTML = '';
-    }
-}
-/*function patselectdicomFile(self, id) {
-    db.collection('file').doc(id.getAttribute('id')).get().then(doc => {
-        console.log(doc.data());
-        loadAndViewImage2(doc.data().DicomUrl);
-        document.getElementById('output').style.display = 'none';
-        document.getElementsByTagName('canvas')[1].style.display = 'block';
-    })
-
-}*/
-
 function patselectFile(self, id) {
     console.log(id.getAttribute('id'));
     patientFilePreview.setAttribute('data-id', id.getAttribute('id'))
