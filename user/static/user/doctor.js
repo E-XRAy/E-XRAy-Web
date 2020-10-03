@@ -1,6 +1,7 @@
 const doctorfileList = document.querySelector('#doctorfileList')
 const doctorFilePreview = document.querySelector('#doctorFilePreview')
 
+//sent from patient to doctor
 searchDoctor.addEventListener('submit',(e)=>{
     var doctorEmailorPhone=document.getElementById('doctorEmailorPhone').value;
     console.log(doctorEmailorPhone);
@@ -19,6 +20,7 @@ searchDoctor.addEventListener('submit',(e)=>{
                 content = doc.data().content;
                 url = doc.data().url;
                 DicomUrl = doc.data().DicomUrl;
+                RadName =  doc.data().RadName;
                 var doctuserfiles = db.collection('Files').doc(doctorEmailorPhone);
                 doctuserfiles.collection('files').add({
                     filename: filename,
@@ -26,6 +28,10 @@ searchDoctor.addEventListener('submit',(e)=>{
                     content: content,
                     url: url,
                     DicomUrl: DicomUrl,
+                    RadName: RadName,
+                    PatName: document.getElementById('currentusername').getAttribute('data-id'),
+                }).then(function() {
+                    alert("Succesfully sent");
                 })
             })
 })
