@@ -145,6 +145,7 @@ function docselectFile(self, id) {
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
+        document.getElementById('notes').innerHTML=doc.data().content;
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('src', doc.data().url);
             item.setAttribute('data-id', id);
@@ -163,6 +164,7 @@ function selectdicomFile(self, id) {
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
+        document.getElementById('notes').innerHTML=doc.data().content;
         loadAndViewImage(doc.data().DicomUrl);
         document.querySelectorAll('#canvasgenerator').forEach(item => {
             item.style.display = 'block';

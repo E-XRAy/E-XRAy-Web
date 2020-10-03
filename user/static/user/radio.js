@@ -41,38 +41,12 @@ fileForm.addEventListener('submit', (e) => {
             });
         });
     }
-    //const DicomUrl = document.getElementsByTagName('canvas')[0].getAttribute('data-id');
-    /*console.log(DicomUrl.length);
-    var docId
-    db.collection('file').add({
-        FileName: FileName,
-        FileType: FileType,
-        Radio_Notes: Notes,
-        PatientId: PatientId,
-        RadiologistId: auth.currentUser.uid,
-        DocList: [],
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        FileUrl: document.getElementById('output').src,
-        DicomUrl: DicomUrl,
-    }).then(function (docRef) {
-        docId = docRef.id;
-        console.log("Document written with ID: ", docRef.id);
+    document.querySelectorAll('#output').forEach(item => {
+        item.style.display = 'none';
     });
-    if (DicomUrl.length > 0) {
-        var canvas = document.getElementsByTagName('canvas')[0];
-        canvas.toBlob(function (blob) {
-            url = URL.createObjectURL(blob);
-            storageRef.child(FileName).put(blob).then(function (snapshot) {
-                console.log('Uploaded a blob or file!');
-                snapshot.ref.getDownloadURL().then(function (url) {
-                    console.log('File available at', url);
-                    db.collection('file').doc(docId).update({
-                        FileUrl: url
-                    })
-                });
-            });
-        });
-    }*/
+    document.querySelectorAll('#canvasgenerator').forEach(item => {
+        item.style.display = 'none';
+    });
     fileForm.reset();
 })
 //image handling
