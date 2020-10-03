@@ -177,13 +177,14 @@ function selectFile(self, id) {
         document.querySelectorAll('#canvasgenerator').forEach(item => {
             item.style.display = 'none';
         });
-        
+        document.querySelectorAll('#dicomviewer').forEach(item => {
+            item.style.display = 'none';
+        });
     })
 }
 //Select and view Dicom File
 function selectdicomFile(self, id) {
     console.log(id);
-    console.log(self.parentNode.parentNode.parentNode.id);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
@@ -206,6 +207,10 @@ function selectdicomFile(self, id) {
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('data-id', doc.id);
             item.style.display = 'none';
+        });
+        
+        document.querySelectorAll('#dicomviewer').forEach(item => {
+            item.style.display = 'block';
         });
     })
 }
