@@ -51,10 +51,9 @@
 <body>
     <!--Nav Bar-->
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-         <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navigation">
-             <span class="navbar-toggler-icon"></span>
-             </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="navbar-collapse collapse" id='navigation'>
             <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="#">Home</a>
@@ -209,10 +208,11 @@
 
                     <form id="radio-files-form">
                         <div class="form pt-2">
-                            <section id="searchPatientSuccess">
-                                <div class="custom-file mb-1"><input type="file" class="custom-file-input"
-                                        id="customFile" onchange="loadFile(event)" name="filename">
-                                    <label class="custom-file-label" for="customFile">Choose file</label></div>
+
+                            <div class="custom-file mb-1"><input type="file" class="custom-file-input" id="customFile"
+                                    onchange="loadFile(event)" name="filename">
+                                <label class="custom-file-label" for="customFile">Choose file</label></div>
+                            <section id="uploadsuccess" style="display: none;">
                                 <label for="FileName">File Name</label>
                                 <input id="FileName" class="form-control-sm col-sm-6" style="border-radius: 10px;"
                                     type="text" placeholder="Enter File Name" name="FileName" required><br>
@@ -236,7 +236,7 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <div class="jumbotron mt-3" style="border-radius: 50px;">
-                        
+
                         <div id="radiofileList" style="max-height: 400px;overflow: auto;">
 
                         </div>
@@ -249,7 +249,7 @@
 
         <br>
 
-        
+
 
     </section>
     <!-- Patient Section -->
@@ -283,14 +283,14 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <div class="jumbotron mt-3" style="border-radius: 50px;">
-                        
+
                         <div id="patientfileList" style="max-height: 400px;overflow: auto;">
                         </div>
 
                     </div>
                 </div>
             </div>
-            
+
     </section>
     <!-- Doctor Section -->
 
@@ -303,7 +303,7 @@
                     <div id='doctorFilePreview' class="jumbotron mt-4 ml-0" style="border-radius: 20px;">
                         <p><img id="output" width="300" /></p>
                         <div id="canvasgenerator"></div>
-                        
+
                     </div>
                     <h4 class="mt-3">Notes</h4>
                     <div id="notes" class="jumbotron mt-4 ml-0" style="border-radius: 20px;"></div>
@@ -320,7 +320,7 @@
                 </div>
             </div>
         </div>
-        
+
     </section>
 
     <!-- General Section -->

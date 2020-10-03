@@ -47,6 +47,7 @@ fileForm.addEventListener('submit', (e) => {
     document.querySelectorAll('#canvasgenerator').forEach(item => {
         item.style.display = 'none';
     });
+    document.getElementById('uploadsuccess').style.display = 'none';
     fileForm.reset();
 })
 //image handling
@@ -69,6 +70,7 @@ var loadFile = function (event) {
         console.log('image');
         storageRef.child('images/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
             console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+            document.getElementById('uploadsuccess').style.display = 'block';
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
@@ -94,6 +96,7 @@ var loadFile = function (event) {
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
                 console.log('File available at', url);
+                document.getElementById('uploadsuccess').style.display = 'block';
                 url = "wadouri:" + url;
                 // image enable the dicomImage element and activate a few tools
                 loadAndViewImage(url);
