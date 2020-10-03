@@ -86,15 +86,15 @@ auth.onAuthStateChanged(user => {
             item.setAttribute('data-id', '');
             item.style.display = 'none';
         });
+        //References Files Of Current User
         var userfiles = db.collection('Files').doc(auth.currentUser.email);
         userfiles.collection('files').onSnapshot((snapshot) => {
             let changes = snapshot.docChanges();
             changes.forEach(change => {
                 if (change.type == 'added') {
-                    //console.log(change.doc.data());
+                    //Generate Files List
                     FileListGen(change.doc);
-                    // PatientFileListGen(change.doc.data());
-                    // RadioFileListGen(change.doc.data());
+                    
                 }
             });
         })
@@ -105,6 +105,8 @@ auth.onAuthStateChanged(user => {
         setupProfile();
     }
 });
+
+//To Generate List Using Function
 const FileListGen = (doc) => {
     if (doc.data()) {
         console.log(doc.data());
@@ -114,7 +116,7 @@ const FileListGen = (doc) => {
                                     data-target="#${doc.id}" data-toggle="collapse">${doc.data().filename}
                     </div>
                 <div id="${doc.id}" class="collapse card-body">${doc.data().content}
-                <button class="float-right btn btn-primary" onclick="docselectFile(this,'${doc.id}')">view</button>
+                <button class="float-right btn btn-primary" onclick="selectFile(this,'${doc.id}')">view</button>
                 <div class="btn btn-primary" onclick="selectdicomFile(this,'${doc.id}')">view(DICOM)</div>
                 </div>
             </div>`
@@ -140,8 +142,8 @@ const FileListGen = (doc) => {
         radiofileList.innerHTML = '';
     }
 }
-
-function docselectFile(self, id) {
+//Select and view Img File
+function selectFile(self, id) {
     console.log(id);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
     userfiles.collection('files').doc(id).get().then(doc => {
@@ -170,7 +172,7 @@ function docselectFile(self, id) {
         
     })
 }
-
+//Select and view Dicom File
 function selectdicomFile(self, id) {
     console.log(id);
     console.log(self.parentNode.parentNode.parentNode.id);

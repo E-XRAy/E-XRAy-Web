@@ -1,5 +1,4 @@
 const doctorfileList = document.querySelector('#doctorfileList')
-const doctorFilePreview = document.querySelector('#doctorFilePreview')
 
 //sent from patient to doctor
 searchDoctor.addEventListener('submit',(e)=>{
