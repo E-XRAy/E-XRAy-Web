@@ -114,7 +114,7 @@ const FileListGen = (doc) => {
                     </div>
                 <div id="${doc.id}" class="collapse card-body">${doc.data().content}
                 <button class="float-right btn btn-primary" onclick="docselectFile(this,'${doc.id}')">view</button>
-                <div class="btn btn-primary" onclick="selectdicomFile(this,${doc.id})">view(DICOM)</div>
+                <div class="btn btn-primary" onclick="selectdicomFile(this,'${doc.id}')">view(DICOM)</div>
                 </div>
             </div>`
         db.collection('Users').doc(auth.currentUser.email).get().then((snapshot) => {
@@ -158,9 +158,10 @@ function docselectFile(self, id) {
 }
 
 function selectdicomFile(self, id) {
+    console.log(id);
     console.log(self.parentNode.parentNode.parentNode.id);
     var userfiles = db.collection('Files').doc(auth.currentUser.email);
-    userfiles.collection('files').doc(id.getAttribute('id')).get().then(doc => {
+    userfiles.collection('files').doc(id).get().then(doc => {
         console.log(doc.data());
         loadAndViewImage(doc.data().DicomUrl);
         document.querySelectorAll('#canvasgenerator').forEach(item => {
