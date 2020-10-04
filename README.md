@@ -34,3 +34,7 @@ pip install -r requirements.txt
 ```python
 python manage.py runserver
 ```
+
+# Resources
+
+[cornerstone](https://github.com/cornerstonejs/cornerstone)
