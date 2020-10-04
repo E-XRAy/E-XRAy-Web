@@ -38,3 +38,7 @@ python manage.py runserver
 # Resources
 
  [cornerstone](https://github.com/cornerstonejs/cornerstone)
+
+# Demo
+
+[E-XRAy-Web](https://e-xray-web-2020.herokuapp.com/)
