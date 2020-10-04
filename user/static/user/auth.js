@@ -169,7 +169,6 @@ function selectFile(self, id) {
         `Radiologist Name:${doc.data().RadName} <br>
         Notes By Radiologist:${doc.data().content}
         `
-        
         document.getElementById('docnotes').innerHTML=
             `Radiologist Name:${doc.data().RadName} <br>
             Patient Name:${doc.data().PatName}<br>
@@ -183,9 +182,7 @@ function selectFile(self, id) {
         document.querySelectorAll('#canvasgenerator').forEach(item => {
             item.style.display = 'none';
         });
-        document.querySelectorAll('#dicomviewer').forEach(item => {
-            item.style.display = 'none';
-        });
+        
     })
 }
 //Select and view Dicom File
@@ -213,10 +210,6 @@ function selectdicomFile(self, id) {
         document.querySelectorAll('#output').forEach(item => {
             item.setAttribute('data-id', doc.id);
             item.style.display = 'none';
-        });
-        
-        document.querySelectorAll('#dicomviewer').forEach(item => {
-            item.style.display = 'block';
         });
     })
 }

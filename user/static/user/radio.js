@@ -73,11 +73,17 @@ var loadFile = function (event) {
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
                 document.getElementById('output').setAttribute('src', url);
-                document.getElementsByTagName('canvas')[0].setAttribute('data-id', "");
-
                 document.getElementById('output').style.display = 'block';
-                document.getElementsByTagName('canvas')[0].style.display = 'none';
 
+                document.getElementsByTagName('canvas')[0].setAttribute('data-id', "");
+                document.querySelectorAll('#output').forEach(item => {
+                    item.setAttribute('src', doc.data().url);
+                    item.setAttribute('data-id', id);
+                    item.style.display = 'block';
+                });
+                document.querySelectorAll('#canvasgenerator').forEach(item => {
+                    item.style.display = 'none';
+                });
                 // [END_EXCLUDE]
             });
         }).catch(function (error) {
@@ -100,7 +106,13 @@ var loadFile = function (event) {
                 loadAndViewImage(url);
                 var canvas = document.getElementsByTagName('canvas')[0];
                 canvas.setAttribute('data-id', url);
-                document.getElementsByTagName('canvas')[0].style.display = 'block';
+                document.querySelectorAll('#output').forEach(item => {
+                    item.setAttribute('data-id', doc.id);
+                    item.style.display = 'none';
+                });
+                document.querySelectorAll('#canvasgenerator').forEach(item => {
+                    item.style.display = 'block';
+                });
             });
         }).catch(function (error) {
             // [START onfailure]
