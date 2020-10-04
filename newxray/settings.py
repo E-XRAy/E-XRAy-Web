@@ -26,7 +26,7 @@ SECRET_KEY = 'swn*=6s5p+#aka0f5t7z&%h-66dg*g9khajp)=f^85hdv5m25)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['new-xray-app.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['new-xray-app.herokuapp.com','127.0.0.1','e-xray-web-2020.herokuapp.com']
 
 
 # Application definition
