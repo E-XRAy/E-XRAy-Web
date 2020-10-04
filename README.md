@@ -37,4 +37,4 @@ python manage.py runserver
 
 # Resources
 
-## [cornerstone](https://github.com/cornerstonejs/cornerstone)
+ [cornerstone](https://github.com/cornerstonejs/cornerstone)
