@@ -60,13 +60,13 @@ var loadFile = function (event) {
     var image = document.getElementById('output');
     console.log(event.target.files[0]);
     var file_to_upload = event.target.files[0];
-    //image.src = URL.createObjectURL(event.target.files[0]);
     var metadata = {
         'contentType': file_to_upload.type
     };
     if (metadata.contentType.length > 0) {
         console.log('image');
-        storageRef.child('images/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
+        date=Date.now().toString();
+        storageRef.child('images/' + date).put(file_to_upload, metadata).then(function (snapshot) {
             console.log('Uploaded', snapshot.totalBytes, 'bytes.');
             document.getElementById('uploadsuccess').style.display = 'block';
             console.log('File metadata:', snapshot.metadata);
@@ -76,11 +76,6 @@ var loadFile = function (event) {
                 document.getElementById('output').style.display = 'block';
 
                 document.getElementsByTagName('canvas')[0].setAttribute('data-id', "");
-                document.querySelectorAll('#output').forEach(item => {
-                    item.setAttribute('src', doc.data().url);
-                    item.setAttribute('data-id', id);
-                    item.style.display = 'block';
-                });
                 document.querySelectorAll('#canvasgenerator').forEach(item => {
                     item.style.display = 'none';
                 });
@@ -94,7 +89,8 @@ var loadFile = function (event) {
         // [END oncomplete]
     } else {
         console.log('dicom');
-        storageRef.child('dicom/' + file_to_upload.name).put(file_to_upload, metadata).then(function (snapshot) {
+        date=Date.now().toString();
+        storageRef.child('dicom/' + date).put(file_to_upload, metadata).then(function (snapshot) {
             console.log('Uploaded', snapshot.totalBytes, 'bytes.');
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
@@ -107,7 +103,6 @@ var loadFile = function (event) {
                 var canvas = document.getElementsByTagName('canvas')[0];
                 canvas.setAttribute('data-id', url);
                 document.querySelectorAll('#output').forEach(item => {
-                    item.setAttribute('data-id', doc.id);
                     item.style.display = 'none';
                 });
                 document.querySelectorAll('#canvasgenerator').forEach(item => {
