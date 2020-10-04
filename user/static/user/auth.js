@@ -1,3 +1,9 @@
+const patientfileList = document.querySelector('#patientfileList')
+const searchDoctor = document.querySelector('#searchDoctor')
+const patientFilePreview = document.querySelector('#patientFilePreview')
+
+
+
 //Login
 const loginForm = document.querySelector('#login-form')
 loginForm.addEventListener('submit', (e) => {
